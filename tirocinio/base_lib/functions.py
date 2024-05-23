@@ -1,5 +1,7 @@
 import pandas as pd
 
+from imblearn.over_sampling import SMOTENC
+
 # creare un sottoinsieme del dataset originale con un rapporto 2:1 sulla feature LUX_01
 def sub_dataset_cani(dataset):
     # divido il dataset sulla base dell'outcome
@@ -45,6 +47,9 @@ def clean_dataset(dataset):
         dataset['STEMSIZE'] = dataset['STEMSIZE'].replace(v, count)
         count += 1
 
+    dataset['DIRECTION'] = dataset['DIRECTION'].replace('CRANIO-DORSALE', 0)
+    dataset['DIRECTION'] = dataset['DIRECTION'].replace('CAUDO-VENTRALE', 1)
+
     return dataset
 
 
@@ -54,3 +59,19 @@ def drop_cols(dataset):
     dataset = dataset.drop(['CASE_ID', 'n_luxation', 'first_lux_days_after_thr', 'DIRECTION'], axis=1)
     
     return dataset
+
+
+# metodo per fare oversampling con SMOTENC
+def oversampling(X, y):
+
+    categorical_features = [True if dtype.name == 'int64'else False for dtype in X.dtypes]
+    smotenc = SMOTENC(categorical_features=categorical_features, random_state=42)
+
+    X_resampled, y_resampled = smotenc.fit_resample(X, y)
+
+    if not isinstance(X_resampled, pd.DataFrame):
+        X_resampled = pd.DataFrame(X_resampled, columns=X.columns)  
+
+    X_resampled['target'] = y_resampled
+
+    return X_resampled

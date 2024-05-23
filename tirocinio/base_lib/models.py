@@ -117,27 +117,28 @@ def random_forest_gridsearchcv_model(X, y, param_grid, cv, scoring):
     return model
 
 
-# stampa albero di decisione
-def print_tree(model, feature_cols):
-    plt.figure(figsize=(16, 12))
-    plot_tree(decision_tree=model, 
-            feature_names=feature_cols, 
-            filled=True, 
-            rounded=True, 
-            class_names=True, max_depth=2)
-    plt.title("Albero di decisione")
-    plt.show()
+def feature_importance_conf(importance, importance_grid, feature_cols):
+    # Larghezza delle barre
+    bar_width = 0.35
 
+    # Posizioni sull'asse y per le due serie
+    y_pos1 = np.arange(len(feature_cols))
+    y_pos2 = np.arange(len(feature_cols)) + bar_width
 
-# grafico feature importance
-def graph_feature_importance(importance, feature_name):
-    feature_importance = pd.DataFrame({'Feature': feature_name, 'Importance': importance})
-    feature_importance = feature_importance.sort_values(by='Importance', ascending=False)
+    # Calcolare le posizioni delle barre in modo che siano centrate rispetto alle etichette
+    centered_y_pos1 = y_pos1 - bar_width / 2
+    centered_y_pos2 = y_pos2 - bar_width / 2
 
-    plt.figure(figsize=(10, 6))
-    plt.barh(feature_importance['Feature'], feature_importance['Importance'])
+    # Visualizza l'importanza delle feature in un unico grafico a barre
+    plt.figure(figsize=(12, 6))
 
-    plt.title("Importanza delle feature")
-    plt.xlabel("Importance")
-    plt.ylabel("Feature")
+    plt.barh(centered_y_pos1, importance_grid, bar_width, align='center', label='Albero di decisione con grid search CV')
+    plt.barh(centered_y_pos2, importance, bar_width, align='center', label='Albero di decisione')
+
+    plt.yticks(y_pos1, feature_cols)
+    plt.xlabel('Importanza delle feature')
+    plt.ylabel('Feature')
+    plt.title('Confronto dell\'importanza dell\'importanza delle feature tra albero di decisione e albero di decisione con grid search CV')
+    plt.legend()
+
     plt.show()
