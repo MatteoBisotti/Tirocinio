@@ -50,3 +50,6 @@ class RandomForestGscvModel(BaseModel):
         plt.xlabel("Importance")
         plt.ylabel("Feature")
         plt.show()
+
+    def get_result(self):
+        return self.model.cv_results_
