@@ -16,9 +16,21 @@ from model.dt_gscv import DecisionTreeGscvModel
 from model.rf import RandomForestModel
 from model.rf_gscv import RandomForestGscvModel
 
+import os
+from dotenv import load_dotenv
+
+project_root = os.path.dirname(os.path.dirname('var.env'))
+env_path = os.path.join(project_root, '.env')
+
+# Carica le variabili d'ambiente dal file .env
+load_dotenv(dotenv_path=env_path)
+
+# Recupera il valore della variabile d'ambiente
+random_state = int(os.getenv('RANDOM_STATE', 42))
+
 # modello di regressione logistica
 def logistic_regression_model(X, y):
-    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42, test_size=0.3)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=random_state, test_size=0.3)
 
     model = LogisticRegressionModel()
 
@@ -32,7 +44,7 @@ def logistic_regression_model(X, y):
 # modello di regressione logistica con cross validation
 def logistic_regression_cv_model(X, y, cv):
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=random_state)
 
     model = LogisticRegressionCvModel(cv=cv)
 
@@ -46,7 +58,7 @@ def logistic_regression_cv_model(X, y, cv):
 # modello di regressione logistica con grid search cv
 def logistic_regression_gridsearchcv_model(X, y, param_grid, cv, scoring):
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=random_state)
     model = LogisticRegressionGscvModel(param_grid=param_grid, cv=cv, scoring=scoring)
 
     model.train(X, y)
@@ -60,7 +72,7 @@ def logistic_regression_gridsearchcv_model(X, y, param_grid, cv, scoring):
 # modello di albero di decisione
 def decision_tree_model(X, y, max_depth):
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42, test_size=0.3)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=random_state, test_size=0.3)
 
     model = DecisionTreeModel(max_depth=max_depth)
 
@@ -74,7 +86,7 @@ def decision_tree_model(X, y, max_depth):
 # modello di albero di decisione con grid search cv
 def decision_tree_gridsearchcv_model(X, y, param_grid, cv, scoring):
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42, test_size=0.3)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=random_state, test_size=0.3)
 
     model = DecisionTreeGscvModel(param_grid=param_grid, cv=cv, scoring=scoring)
 
@@ -90,7 +102,7 @@ def decision_tree_gridsearchcv_model(X, y, param_grid, cv, scoring):
 # modello di random forest
 def random_forest_model(X, y, n_estimators, max_depth):
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=random_state)
 
     model = RandomForestModel(n_estimators=n_estimators, max_depth=max_depth)
 
@@ -104,7 +116,7 @@ def random_forest_model(X, y, n_estimators, max_depth):
 # modello di random forest con grid search cv
 def random_forest_gridsearchcv_model(X, y, param_grid, cv, scoring):
     
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=random_state)
 
     model = RandomForestGscvModel(param_grid=param_grid, cv=cv, scoring=scoring)
 

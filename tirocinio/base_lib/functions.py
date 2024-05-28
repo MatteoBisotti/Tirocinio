@@ -2,6 +2,8 @@ import pandas as pd
 
 from imblearn.over_sampling import SMOTENC
 
+from sklearn.preprocessing import StandardScaler
+
 # creare un sottoinsieme del dataset originale con un rapporto 2:1 sulla feature LUX_01
 def sub_dataset_cani(dataset):
     # divido il dataset sulla base dell'outcome
@@ -75,3 +77,11 @@ def oversampling(X, y):
     X_resampled['target'] = y_resampled
 
     return X_resampled
+
+
+def scaler(dataset):
+    
+    scaler = StandardScaler()
+    dataset[dataset.select_dtypes(include=['float64']).columns] = scaler.fit_transform(dataset.select_dtypes(include=['float64']))
+
+    return dataset
