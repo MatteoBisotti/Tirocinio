@@ -1,0 +1,42 @@
+2024-05-29 15:39:27,451 - functions - INFO - Modello di regressione logistica
+2024-05-29 15:39:27,452 - functions - INFO - Tempo di training: 0.3315460681915283 secondi
+2024-05-29 15:39:27,452 - functions - INFO - Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.77      0.70      0.73       920
+           1       0.72      0.79      0.75       912
+
+    accuracy                           0.74      1832
+   macro avg       0.74      0.74      0.74      1832
+weighted avg       0.74      0.74      0.74      1832
+
+2024-05-29 15:39:27,452 - functions - INFO - 
+
+2024-05-29 15:39:28,872 - functions - INFO - Modello di regressione logistica con cross validation
+2024-05-29 15:39:28,873 - functions - INFO - Tempo di training: 1.3665063381195068 secondi
+2024-05-29 15:39:28,873 - functions - INFO - Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.77      0.69      0.73       920
+           1       0.72      0.79      0.75       912
+
+    accuracy                           0.74      1832
+   macro avg       0.74      0.74      0.74      1832
+weighted avg       0.74      0.74      0.74      1832
+
+2024-05-29 15:39:28,873 - functions - INFO - 
+
+2024-05-29 15:39:33,782 - functions - INFO - Modello di regressione logistica con grid search cv
+2024-05-29 15:39:33,782 - functions - INFO - Tempo di training: 4.865511655807495 secondi
+2024-05-29 15:39:33,783 - functions - INFO - Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.77      0.69      0.73       920
+           1       0.72      0.79      0.75       912
+
+    accuracy                           0.74      1832
+   macro avg       0.74      0.74      0.74      1832
+weighted avg       0.74      0.74      0.74      1832
+
+2024-05-29 15:39:33,783 - functions - INFO - 
+

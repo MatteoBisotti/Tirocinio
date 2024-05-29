@@ -4,6 +4,8 @@ from imblearn.over_sampling import SMOTENC
 
 from sklearn.preprocessing import StandardScaler
 
+import logging
+
 # creare un sottoinsieme del dataset originale con un rapporto 2:1 sulla feature LUX_01
 def sub_dataset_cani(dataset):
     # divido il dataset sulla base dell'outcome
@@ -85,3 +87,22 @@ def scaler(dataset):
     dataset[dataset.select_dtypes(include=['float64']).columns] = scaler.fit_transform(dataset.select_dtypes(include=['float64']))
 
     return dataset
+
+
+def create_log(name):
+    # Crea un oggetto logger
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.INFO)
+
+    # Crea un handler per il file di log
+    fh = logging.FileHandler(name)
+    fh.setLevel(logging.INFO)
+
+    # Crea un formatter per il messaggio di log
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    fh.setFormatter(formatter)
+
+    # Aggiungi l'handler al logger
+    logger.addHandler(fh)
+
+    return logger

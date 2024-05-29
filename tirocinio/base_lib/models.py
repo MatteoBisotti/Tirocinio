@@ -16,6 +16,8 @@ from model.dt_gscv import DecisionTreeGscvModel
 from model.rf import RandomForestModel
 from model.rf_gscv import RandomForestGscvModel
 
+import time
+
 import os
 from dotenv import load_dotenv
 
@@ -34,11 +36,15 @@ def logistic_regression_model(X, y):
 
     model = LogisticRegressionModel()
 
+    start_time = time.time()
     model.train(X_train, y_train)
+    end_time = time.time()
 
     model.print_report(X_test, y_test)
+
+    t_time = end_time - start_time
     
-    return model
+    return model, t_time, model.get_report(X_test, y_test)
 
 
 # modello di regressione logistica con cross validation
@@ -48,11 +54,15 @@ def logistic_regression_cv_model(X, y, cv):
 
     model = LogisticRegressionCvModel(cv=cv)
 
+    start_time = time.time()
     model.train(X, y)
+    end_time = time.time()
 
     model.print_report(X_test, y_test)
 
-    return model
+    t_time = end_time - start_time
+    
+    return model, t_time, model.get_report(X_test, y_test)
 
 
 # modello di regressione logistica con grid search cv
@@ -61,11 +71,17 @@ def logistic_regression_gridsearchcv_model(X, y, param_grid, cv, scoring):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=random_state)
     model = LogisticRegressionGscvModel(param_grid=param_grid, cv=cv, scoring=scoring)
 
+    start_time = time.time()
     model.train(X, y)
+    end_time = time.time()
 
     model.print_report(X_test, y_test)
 
     print("Migliori parametri:", model.print_best_params())
+
+    t_time = end_time - start_time
+    
+    return model, t_time, model.get_report(X_test, y_test)
 
 
 
@@ -76,11 +92,15 @@ def decision_tree_model(X, y, max_depth):
 
     model = DecisionTreeModel(max_depth=max_depth)
 
+    start_time = time.time()
     model.train(X_train, y_train)
+    end_time = time.time()
 
     model.print_report(X_test, y_test)
 
-    return model 
+    t_time = end_time - start_time
+    
+    return model, t_time, model.get_report(X_test, y_test)
 
 
 # modello di albero di decisione con grid search cv
@@ -90,13 +110,17 @@ def decision_tree_gridsearchcv_model(X, y, param_grid, cv, scoring):
 
     model = DecisionTreeGscvModel(param_grid=param_grid, cv=cv, scoring=scoring)
 
+    start_time = time.time()
     model.train(X_train, y_train)
+    end_time = time.time()
 
     model.print_report(X_test, y_test)
 
     print("Migliori parametri:", model.print_best_params())
 
-    return model
+    t_time = end_time - start_time
+    
+    return model, t_time, model.get_report(X_test, y_test)
 
 
 # modello di random forest
@@ -106,11 +130,15 @@ def random_forest_model(X, y, n_estimators, max_depth):
 
     model = RandomForestModel(n_estimators=n_estimators, max_depth=max_depth)
 
+    start_time = time.time()
     model.train(X_train, y_train)
+    end_time = time.time()
 
     model.print_report(X_test, y_test)
 
-    return model
+    t_time = end_time - start_time
+    
+    return model, t_time, model.get_report(X_test, y_test)
 
 
 # modello di random forest con grid search cv
@@ -120,13 +148,17 @@ def random_forest_gridsearchcv_model(X, y, param_grid, cv, scoring):
 
     model = RandomForestGscvModel(param_grid=param_grid, cv=cv, scoring=scoring)
 
+    start_time = time.time()
     model.train(X_train, y_train)
+    end_time = time.time()
 
     model.print_report(X_test, y_test)
 
     print("Migliori parametri:", model.print_best_params())
     
-    return model
+    t_time = end_time - start_time
+    
+    return model, t_time, model.get_report(X_test, y_test)
 
 
 def feature_importance_conf(importance, importance_grid, feature_cols):

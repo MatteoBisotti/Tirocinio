@@ -8,8 +8,11 @@ class BaseModel(ABC):
 
     def predict(self, X_test):
         return self.model.predict(X_test)
+    
+    def get_report(self, X_test, y_test):
+        predictions = self.predict(X_test=X_test)
+        return classification_report(y_test, predictions)
 
     def print_report(self, X_test, y_test):
-        predictions = self.predict(X_test=X_test)
         print("Report di classificazione:")
-        print(classification_report(y_test, predictions))
+        print(self.get_report(X_test, y_test))
