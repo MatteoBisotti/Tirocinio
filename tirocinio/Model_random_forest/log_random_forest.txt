@@ -1,0 +1,14 @@
+2024-05-31 09:31:55,324 - functions - INFO - Modello di albero di decisione
+2024-05-31 09:31:55,326 - functions - INFO - Tempo di training: 0.061768531799316406 secondi
+2024-05-31 09:31:55,326 - functions - INFO - Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.96      0.94      0.95       920
+           1       0.94      0.96      0.95       912
+
+    accuracy                           0.95      1832
+   macro avg       0.95      0.95      0.95      1832
+weighted avg       0.95      0.95      0.95      1832
+
+2024-05-31 09:31:55,326 - functions - INFO - 
+

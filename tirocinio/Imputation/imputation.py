@@ -69,7 +69,7 @@ def total_imputation_regression(dataset):
     dataset = imputation_linear_regression(dataset, 'BCS')
     dataset = imputation_linear_regression(dataset, 'STEMANTEVERSIONREAL')
     dataset = imputation_linear_regression(dataset, 'ALO')
-    dataset = imputation_logistic_regression(dataset, 'HIPRL')
+    #dataset = imputation_logistic_regression(dataset, 'HIPRL')
 
     return dataset
 

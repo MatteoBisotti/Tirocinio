@@ -106,3 +106,9 @@ def create_log(name):
     logger.addHandler(fh)
 
     return logger
+
+
+def get_strategy_oversampling(n_negativi, rapporto):
+    
+    n_positivi = (1/rapporto * n_negativi) - n_negativi
+    return int(n_positivi)
