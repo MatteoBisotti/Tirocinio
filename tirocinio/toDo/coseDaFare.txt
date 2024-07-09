@@ -1,0 +1,8 @@
+Cose da fare:
+
+- salvare i nuovi dataset bilanciati (preprocessing)                                    ok 
+- riguardare l'organizzazione del codice
+- finire di scrivere la documentazione con pydoc
+- fare generazione di dati con auth encoder                                             ok
+- tracciare le diverse matrici di correlazione (originale, SMOTENC, auth encoder)       ok 
+- riguardare i file di log, stampare i risultati usando espressioni regolari

@@ -40,7 +40,6 @@ def total_imputation_mean_median(dataset):
     dataset = imputation_mean(dataset, 'BCS')
     dataset = imputation_median(dataset, 'STEMANTEVERSIONREAL')
     dataset = imputation_mean(dataset, 'ALO')
-    dataset = imputation_median(dataset, 'HIPRL')
 
     return dataset
 
@@ -69,7 +68,6 @@ def total_imputation_regression(dataset):
     dataset = imputation_linear_regression(dataset, 'BCS')
     dataset = imputation_linear_regression(dataset, 'STEMANTEVERSIONREAL')
     dataset = imputation_linear_regression(dataset, 'ALO')
-    #dataset = imputation_logistic_regression(dataset, 'HIPRL')
 
     return dataset
 
@@ -86,7 +84,7 @@ def knn_imputation(dataset, binary_features):
 
     # Identifichiamo le colonne che devono essere mantenute come int
     int_columns = [
-        'CASE_ID', 'BREED', 'GENDER_01', 'Taglia', 'INDICATIONFORTHR',
+        'BREED', 'GENDER_01', 'Taglia',
         'YEAR', 'GENERATION', 'STEMSIZE', 'CUPSIZE', 'NECKSIZE', 'HEADSIZE',
         'CUPRETROVERSION', 'RECTUSFEMORISM.RELEASE', 'LUX_01', 'LUX_CR'
     ]
@@ -122,7 +120,6 @@ def total_nr_imputation(dataset):
     dataset['ALO'] = nr_imputation_linear(dataset, 'ALO')
     dataset['STEMANTEVERSIONREAL'] = nr_imputation_linear(dataset, 'STEMANTEVERSIONREAL')
     dataset['BSC'] = nr_imputation_linear(dataset, 'BCS')
-    dataset['HIPRL'] = nr_imputation_sigmoid(dataset, 'HIPRL')
 
     return dataset
 

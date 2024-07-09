@@ -1,0 +1,14 @@
+2024-07-08 18:46:57,306 - INFO - Metrics:
+       Metrica    Valore
+0  Accuratezza  0.703333
+1  Sensibilità  0.577500
+2  Specificità  0.697226
+3     F1-score  0.560559
+4      ROC AUC  0.577500
+2024-07-09 18:52:15,453 - INFO - Metrics:
+       Metrica    Valore
+0  Accuratezza  0.703333
+1  Sensibilità  0.577500
+2  Specificità  0.697226
+3     F1-score  0.560559
+4      ROC AUC  0.577500

@@ -25,6 +25,14 @@ import functions as func
 
 from imblearn.over_sampling import SMOTENC
 
+import seaborn as sns
+
+from IPython.display import display
+
+from sklearn.model_selection import GridSearchCV
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
+
 project_root = os.path.dirname(os.path.dirname('var.env'))
 env_path = os.path.join(project_root, '.env')
 
@@ -33,6 +41,10 @@ load_dotenv(dotenv_path=env_path)
 
 # Recupera il valore della variabile d'ambiente
 random_state = int(os.getenv('RANDOM_STATE', 42))
+
+feature_cols = ['BREED', 'GENDER_01', 'AGEATSURGERYmo', 'BODYWEIGHTKG', 'Taglia', 'BCS', 
+                'YEAR', 'GENERATION', 'STEMSIZE', 'CUPSIZE', 'NECKSIZE', 'HEADSIZE', 'ALO', 'CUPRETROVERSION', 'STEMANTEVERSIONREAL', 
+                'RECTUSFEMORISM.RELEASE', 'LUX_CR']
 
 # modello di regressione logistica
 def logistic_regression_model(X, y):
@@ -74,137 +86,83 @@ def logistic_regression_cv_model(X, y, cv):
 
 
 # modello di regressione logistica con grid search cv
-def logistic_regression_gridsearchcv_model(X, y, param_grid, cv, scoring):
+def logistic_regression_gridsearchcv_model(X_train, X_test, y_train, y_test, param_grid, cv, scoring):
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=random_state)
     model = LogisticRegressionGscvModel(param_grid=param_grid, cv=cv, scoring=scoring)
 
-    start_time = time.time()
-    model.train(X, y)
-    end_time = time.time()
+    model.train(X_train, y_train)
 
-    model.print_report(X_test, y_test)
-
-    print("Migliori parametri:", model.print_best_params())
-
-    model.statistics(X_test, y_test)
-
-    t_time = end_time - start_time
+    metrics_df = model.statistics(X_test, y_test)
+    display(metrics_df)
+    model.plot_metrics(metrics_df)
     
-    return model, t_time, model.get_report(X_test, y_test)
+    return model, model.get_report(X_test, y_test)
 
 
 # modello di albero di decisione
-def decision_tree_model(X, y, max_depth):
+def decision_tree_model(X_train, X_test, y_train, y_test, max_depth, min_sample_split, min_impurity_decrease, criterion):
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=random_state, test_size=0.25)
-
-    model = DecisionTreeModel(max_depth=max_depth)
-
-    start_time = time.time()
-    model.train(X_train, y_train)
-    end_time = time.time()
-
-    model.print_report(X_test, y_test)
-
-    print("Risultati sul test set")
-    model.statistics(X_test, y_test)
-
-    print("\nRisultati sul train set")
-    model.statistics(X_train, y_train)
-
-    t_time = end_time - start_time
+    model = DecisionTreeModel(max_depth=max_depth, 
+                              min_sample_split=min_sample_split, 
+                              min_impurity_decrease=min_impurity_decrease, 
+                              criterion=criterion)
     
-    return model, t_time, model.get_report(X_test, y_test)
+    model.train(X_train, y_train)
+    
+    return model
 
 # modello di albero di decisione con grid search cv
-def decision_tree_gridsearchcv_model(X, y, param_grid, cv, scoring):
-
-    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=random_state, test_size=0.25)
+def decision_tree_gridsearchcv_model(X_train, X_test, y_train, y_test, param_grid, cv, scoring):
 
     model = DecisionTreeGscvModel(param_grid=param_grid, cv=cv, scoring=scoring)
 
-    start_time = time.time()
     model.train(X_train, y_train)
-    end_time = time.time()
 
-    model.print_report(X_test, y_test)
+    results = model.get_best_params()
+    display(results)
 
-    print("Migliori parametri:", model.print_best_params())
-
-    model.statistics(X_test, y_test)
-
-    t_time = end_time - start_time
+    metrics_df = model.statistics(X_test, y_test)
+    display(metrics_df)
+    model.plot_metrics(metrics_df)
     
-    return model, t_time, model.get_report(X_test, y_test)
+    model.print_tree(feature_cols)
+    model.graph_feature_importance(feature_cols)
+    
+    return model, model.get_report(X_test, y_test)
 
 
 # modello di random forest
-def random_forest_model(X, y, n_estimators, max_depth):
-
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=random_state)
-
+def random_forest_model(X_train, X_test, y_train, y_test, n_estimators, max_depth):
     model = RandomForestModel(n_estimators=n_estimators, max_depth=max_depth)
 
-    start_time = time.time()
     model.train(X_train, y_train)
-    end_time = time.time()
 
-    model.print_report(X_test, y_test)
-
-    model.statistics(X_test, y_test)
-
-    t_time = end_time - start_time
+    metrics_df = model.statistics(X_test, y_test)
+    display(metrics_df)
+    model.plot_metrics(metrics_df)
     
-    return model, t_time, model.get_report(X_test, y_test)
+    model.print_tree(feature_cols)
+    model.graph_feature_importance(feature_cols)
+    
+    return model, model.get_report(X_test, y_test)
 
 
 # modello di random forest con grid search cv
-def random_forest_gridsearchcv_model(X, y, param_grid, cv, scoring):
-    
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=random_state)
+def random_forest_gridsearchcv_model(X_train, X_test, y_train, y_test, param_grid, cv, scoring):
 
     model = RandomForestGscvModel(param_grid=param_grid, cv=cv, scoring=scoring)
 
-    start_time = time.time()
     model.train(X_train, y_train)
-    end_time = time.time()
 
-    model.print_report(X_test, y_test)
+    results = model.get_best_params()
+    display(results)
 
-    print("Migliori parametri:", model.print_best_params())
-
-    model.statistics(X_test, y_test)
-
-    model.statistics(X_train, y_train)
+    metrics_df = model.statistics(X_test, y_test)
+    display(metrics_df)
+    model.plot_metrics(metrics_df)
     
-    t_time = end_time - start_time
+    model.print_tree(feature_cols)
+    model.graph_feature_importance(feature_cols)
     
-    return model, t_time, model.get_report(X_test, y_test)
+    return model, metrics_df
 
-
-def feature_importance_conf(importance, importance_grid, feature_cols):
-    # Larghezza delle barre
-    bar_width = 0.35
-
-    # Posizioni sull'asse y per le due serie
-    y_pos1 = np.arange(len(feature_cols))
-    y_pos2 = np.arange(len(feature_cols)) + bar_width
-
-    # Calcolare le posizioni delle barre in modo che siano centrate rispetto alle etichette
-    centered_y_pos1 = y_pos1 - bar_width / 2
-    centered_y_pos2 = y_pos2 - bar_width / 2
-
-    # Visualizza l'importanza delle feature in un unico grafico a barre
-    plt.figure(figsize=(12, 6))
-
-    plt.barh(centered_y_pos1, importance_grid, bar_width, align='center', label='Albero di decisione con grid search CV')
-    plt.barh(centered_y_pos2, importance, bar_width, align='center', label='Albero di decisione')
-
-    plt.yticks(y_pos1, feature_cols)
-    plt.xlabel('Importanza delle feature')
-    plt.ylabel('Feature')
-    plt.title('Confronto dell\'importanza dell\'importanza delle feature tra albero di decisione e albero di decisione con grid search CV')
-    plt.legend()
-
-    plt.show()
