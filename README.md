@@ -28,5 +28,5 @@ Assicurati di avere installato [Anaconda](https://www.anaconda.com/products/indi
     ```bash
     pip install numpy
     pip install pandas
-    pip install pandas
+    pip install sklearn
     ```
