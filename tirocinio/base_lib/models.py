@@ -164,5 +164,5 @@ def random_forest_gridsearchcv_model(X_train, X_test, y_train, y_test, param_gri
     model.print_tree(feature_cols)
     model.graph_feature_importance(feature_cols)
     
-    return model, metrics_df
+    return model, metrics_df, results
 

@@ -1,28 +1,3 @@
-"""
-This module performs data processing, model training, and evaluation using decision tree models
-on a dataset. It includes functions for data visualization, metrics calculation, and plotting
-the results.
-
-Functions:
-    metrics_boxplot(metrics_total_df): Generates and displays box plots for various metrics.
-    plot_metrics_mean_dv(summary_df): Generates and displays a bar plot showing mean and standard deviation for each metric.
-    main(): Main function to execute the data processing, model training, and evaluation workflow.
-
-Dependencies:
-    pandas
-    matplotlib
-    seaborn
-    IPython.display
-    sys
-    logging
-
-Modules:
-    imp: module for data imputation.
-    models: module containing machine learning model.
-    functions: module containing various helper functions.
-
-"""
-
 import pandas as pd
 import logging
 
@@ -40,7 +15,7 @@ import seaborn as sns
 
 logging.basicConfig(level=logging.INFO, format='%(message)s')
 
-file_handler = logging.FileHandler('../logs/dt_model.log')
+file_handler = logging.FileHandler('../logs/dt_model_encoder.log')
 file_handler.setLevel(logging.INFO)
 file_handler.setFormatter(logging.Formatter('%(message)s'))
 
@@ -48,7 +23,6 @@ logger = logging.getLogger()
 
 logger.handlers = []
 logger.addHandler(file_handler)
-
 
 def metrics_boxplot(metrics_total_df):
     """
@@ -107,7 +81,7 @@ def main():
     """
 
     dataset = pd.read_csv("../csv/dataset_original.csv")
-    df = pd.read_csv("../csv/dataset_SMOTENC.csv")
+    df = pd.read_csv("../csv/dataset_encoder.csv")
 
     dataset = func.drop_cols(dataset)
     df = func.drop_cols(df)

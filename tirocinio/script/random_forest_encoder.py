@@ -7,10 +7,11 @@ import models
 import functions as func
 from IPython.display import display
 import logging
+import re
 
 logging.basicConfig(level=logging.INFO, format='%(message)s')
 
-file_handler = logging.FileHandler('../logs/rf_model.log')
+file_handler = logging.FileHandler('../logs/rf_model_encoder.log')
 file_handler.setLevel(logging.INFO)
 file_handler.setFormatter(logging.Formatter('%(message)s'))
 
@@ -21,7 +22,7 @@ logger.addHandler(file_handler)
 
 def main():
     dataset = pd.read_csv("../csv/dataset_original.csv")
-    df = pd.read_csv("../csv/dataset_SMOTENC.csv")
+    df = pd.read_csv("../csv/dataset_encoder.csv")
 
     dataset = func.drop_cols(dataset)
     df = func.drop_cols(df)

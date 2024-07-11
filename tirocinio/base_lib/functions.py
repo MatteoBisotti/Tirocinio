@@ -13,8 +13,7 @@ Funzioni:
     scaler(dataset): Applica la standardizzazione alle caratteristiche numeriche del dataset.
     get_strategy_oversampling(n_negativi, rapporto): Calcola il numero di esempi positivi per il sovracampionamento.
     plot_outcome_feature(df, feature_name): Visualizza la distribuzione dei valori di una caratteristica specifica.
-    diplay_corr_matrix(dataset): Visualizza la matrice di correlazione del dataset tramite heatmap.
-
+    display_corr_matrix(dataset): Visualizza la matrice di correlazione del dataset tramite heatmap del modulo seaborn e la restituisce.
 
 Moduli esterni richiesti:
     pandas
@@ -154,6 +153,7 @@ def train_test(dataset, df, random):
     else:
         y_test_0 = dataset[dataset['LUX_01']==0].sample(n=200, random_state=42)
         y_test_1 = dataset[dataset['LUX_01']==1].sample(n=100, random_state=42)
+
     
     lista_dataframe = [y_test_0, y_test_1]
     testing_set = pd.concat(lista_dataframe, ignore_index=True)
@@ -268,7 +268,7 @@ def get_strategy_oversampling(n_negativi, rapporto):
         rapporto (float): Il rapporto desiderato tra esempi positivi e negativi.
 
     Returns:
-        int: Il numero di esempi positivi da generare.
+        n_positivi: Il numero di esempi positivi da generare.
     """
     n_positivi = (1 / rapporto * n_negativi) - n_negativi
     return int(n_positivi)
@@ -297,24 +297,27 @@ def plot_outcome_feature(df, feature_name):
                         textcoords='offset points')
 
     plt.xlabel('Classe')
-    plt.ylabel('Value Count')
+    plt.ylabel('Conteggio valori')
     plt.title('Distribuzione dei valori di {}'.format(feature_name))
     plt.show()
 
-def diplay_corr_matrix(dataset):
+def display_corr_matrix(dataset):
     '''
-    Visualizza la matrice di correlazione del dataset tramite heatmap del modulo seaborn.
+    Visualizza la matrice di correlazione del dataset tramite heatmap del modulo seaborn e la restituisce.
 
     Args:
         dataset (pd.Dataframe): Il dataset su cui calcolare la matrice di correlazione.
+
+    Returns:
+        matrice_corr: matrice di correlazione del dataset.
     '''
-    matrice_corr_drop = dataset.corr()
+    matrice_corr = dataset.corr()
 
     # Dimensione della figura
     plt.figure(figsize=(28, 20))
 
     # Informazioni della heatmap
-    sns.heatmap(matrice_corr_drop, annot=True, 
+    sns.heatmap(matrice_corr, annot=True, 
                         fmt='.1f', cmap='coolwarm', 
                         square=True, linewidths=.5, 
                         cbar_kws={'shrink': .5},
@@ -326,3 +329,5 @@ def diplay_corr_matrix(dataset):
     # Descrizione delle etichette della matrice
     plt.xticks(rotation=45, ha='right')
     plt.yticks(rotation=0)
+
+    return matrice_corr
