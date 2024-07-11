@@ -324,7 +324,7 @@ def display_corr_matrix(dataset):
                         vmin=-1.0, vmax=1.0)
 
     # Titolo
-    plt.title("Matrice di correlazione")
+    plt.title("Matrice di correlazione", fontsize=15)
 
     # Descrizione delle etichette della matrice
     plt.xticks(rotation=45, ha='right')
