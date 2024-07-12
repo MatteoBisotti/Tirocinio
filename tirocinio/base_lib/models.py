@@ -1,38 +1,42 @@
-from sklearn.tree import plot_tree
+"""
+Modulo per la gestione di modelli di apprendimento automatico con Decision Tree e Random Forest.
 
-from sklearn.model_selection import train_test_split
+Questo modulo include classi e funzioni per la creazione, l'addestramento e la valutazione di modelli
+di albero di decisione e foresta casuale, inclusa l'ottimizzazione tramite Grid Search CV.
 
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
+Funzioni:
+    - DecisionTreeModel: Classe per il modello di albero di decisione.
+    - DecisionTreeGscvModel: Classe per il modello di albero di decisione con Grid Search CV.
+    - RandomForestModel: Classe per il modello di foresta casuale.
+    - RandomForestGscvModel: Classe per il modello di foresta casuale con Grid Search CV.
 
-from model.logistic_regression import LogisticRegressionModel
-from model.logistic_regression_cv import LogisticRegressionCvModel
-from model.logistic_regression_gscv import LogisticRegressionGscvModel
+Funzioni:
+    - decision_tree_model: Crea e addestra un modello di albero di decisione.
+    - decision_tree_gridsearchcv_model: Crea e addestra un modello di albero di decisione con Grid Search CV.
+    - random_forest_model: Crea e addestra un modello di foresta casuale.
+    - random_forest_gridsearchcv_model: Crea e addestra un modello di foresta casuale con Grid Search CV.
 
-from model.dt import DecisionTreeModel
-from model.dt_gscv import DecisionTreeGscvModel
-
-from model.rf import RandomForestModel
-from model.rf_gscv import RandomForestGscvModel
-
-import time
+Moduli esterni richiesti:
+    - os
+    - dotenv
+    - seaborn
+    - IPython.display
+    - model.dt (DecisionTreeModel)
+    - model.dt_gscv (DecisionTreeGscvModel)
+    - model.rf (RandomForestModel)
+    - model.rf_gscv (RandomForestGscvModel)
+"""
 
 import os
 from dotenv import load_dotenv
-
-import functions as func 
-
-from imblearn.over_sampling import SMOTENC
-
 import seaborn as sns
-
 from IPython.display import display
+from model.dt import DecisionTreeModel
+from model.dt_gscv import DecisionTreeGscvModel
+from model.rf import RandomForestModel
+from model.rf_gscv import RandomForestGscvModel
 
-from sklearn.model_selection import GridSearchCV
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
-
+# Imposta il percorso del file .env
 project_root = os.path.dirname(os.path.dirname('var.env'))
 env_path = os.path.join(project_root, '.env')
 
@@ -42,66 +46,28 @@ load_dotenv(dotenv_path=env_path)
 # Recupera il valore della variabile d'ambiente
 random_state = int(os.getenv('RANDOM_STATE', 42))
 
+# Colonne delle caratteristiche
 feature_cols = ['BREED', 'GENDER_01', 'AGEATSURGERYmo', 'BODYWEIGHTKG', 'Taglia', 'BCS', 
-                'YEAR', 'GENERATION', 'STEMSIZE', 'CUPSIZE', 'NECKSIZE', 'HEADSIZE', 'ALO', 'CUPRETROVERSION', 'STEMANTEVERSIONREAL', 
-                'RECTUSFEMORISM.RELEASE', 'LUX_CR']
+                'YEAR', 'GENERATION', 'STEMSIZE', 'CUPSIZE', 'NECKSIZE', 'HEADSIZE', 'ALO', 'CUPRETROVERSION', 
+                'STEMANTEVERSIONREAL', 'RECTUSFEMORISM.RELEASE', 'LUX_CR']
 
-# modello di regressione logistica
-def logistic_regression_model(X, y):
-    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=random_state, test_size=0.25)
-
-    model = LogisticRegressionModel()
-
-    start_time = time.time()
-    model.train(X_train, y_train)
-    end_time = time.time()
-
-    model.print_report(X_test, y_test)
-
-    model.statistics(X_test, y_test)
-
-    t_time = end_time - start_time
-    
-    return model, t_time, model.get_report(X_test, y_test)
-
-
-# modello di regressione logistica con cross validation
-def logistic_regression_cv_model(X, y, cv):
-
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=random_state)
-
-    model = LogisticRegressionCvModel(cv=cv)
-
-    start_time = time.time()
-    model.train(X, y)
-    end_time = time.time()
-
-    model.print_report(X_test, y_test)
-
-    model.statistics(X_test, y_test)
-
-    t_time = end_time - start_time
-    
-    return model, t_time, model.get_report(X_test, y_test)
-
-
-# modello di regressione logistica con grid search cv
-def logistic_regression_gridsearchcv_model(X_train, X_test, y_train, y_test, param_grid, cv, scoring):
-
-    model = LogisticRegressionGscvModel(param_grid=param_grid, cv=cv, scoring=scoring)
-
-    model.train(X_train, y_train)
-
-    metrics_df = model.statistics(X_test, y_test)
-    display(metrics_df)
-    model.plot_metrics(metrics_df)
-    
-    return model, model.get_report(X_test, y_test)
-
-
-# modello di albero di decisione
 def decision_tree_model(X_train, X_test, y_train, y_test, max_depth, min_sample_split, min_impurity_decrease, criterion):
+    """
+    Crea e addestra un modello di albero di decisione.
 
+    Args:
+        X_train (DataFrame): Dati di addestramento delle caratteristiche.
+        X_test (DataFrame): Dati di test delle caratteristiche.
+        y_train (Series): Dati di addestramento delle etichette.
+        y_test (Series): Dati di test delle etichette.
+        max_depth (int): Profondità massima dell'albero.
+        min_sample_split (int): Numero minimo di campioni richiesti per dividere un nodo interno.
+        min_impurity_decrease (float): Riduzione minima dell'impurità per effettuare una divisione.
+        criterion (str): Criterio per misurare la qualità di una divisione (es. "gini" o "entropy").
+
+    Returns:
+        DecisionTreeModel: Modello addestrato di albero di decisione.
+    """
     model = DecisionTreeModel(max_depth=max_depth, 
                               min_sample_split=min_sample_split, 
                               min_impurity_decrease=min_impurity_decrease, 
@@ -111,9 +77,22 @@ def decision_tree_model(X_train, X_test, y_train, y_test, max_depth, min_sample_
     
     return model
 
-# modello di albero di decisione con grid search cv
 def decision_tree_gridsearchcv_model(X_train, X_test, y_train, y_test, param_grid, cv, scoring):
+    """
+    Crea e addestra un modello di albero di decisione con Grid Search CV.
 
+    Args:
+        X_train (DataFrame): Dati di addestramento delle caratteristiche.
+        X_test (DataFrame): Dati di test delle caratteristiche.
+        y_train (Series): Dati di addestramento delle etichette.
+        y_test (Series): Dati di test delle etichette.
+        param_grid (dict): Dizionario di parametri per la ricerca a griglia.
+        cv (int): Numero di fold per la validazione incrociata.
+        scoring (str): Metodologia di scoring per la validazione incrociata.
+
+    Returns:
+        tuple: Modello addestrato di albero di decisione con Grid Search CV e report dei risultati.
+    """
     model = DecisionTreeGscvModel(param_grid=param_grid, cv=cv, scoring=scoring)
 
     model.train(X_train, y_train)
@@ -130,9 +109,21 @@ def decision_tree_gridsearchcv_model(X_train, X_test, y_train, y_test, param_gri
     
     return model, model.get_report(X_test, y_test)
 
-
-# modello di random forest
 def random_forest_model(X_train, X_test, y_train, y_test, n_estimators, max_depth):
+    """
+    Crea e addestra un modello di foresta casuale.
+
+    Args:
+        X_train (DataFrame): Dati di addestramento delle caratteristiche.
+        X_test (DataFrame): Dati di test delle caratteristiche.
+        y_train (Series): Dati di addestramento delle etichette.
+        y_test (Series): Dati di test delle etichette.
+        n_estimators (int): Numero di alberi nella foresta.
+        max_depth (int): Profondità massima degli alberi.
+
+    Returns:
+        tuple: Modello addestrato di foresta casuale e report dei risultati.
+    """
     model = RandomForestModel(n_estimators=n_estimators, max_depth=max_depth)
 
     model.train(X_train, y_train)
@@ -146,10 +137,22 @@ def random_forest_model(X_train, X_test, y_train, y_test, n_estimators, max_dept
     
     return model, model.get_report(X_test, y_test)
 
-
-# modello di random forest con grid search cv
 def random_forest_gridsearchcv_model(X_train, X_test, y_train, y_test, param_grid, cv, scoring):
+    """
+    Crea e addestra un modello di foresta casuale con Grid Search CV.
 
+    Args:
+        X_train (DataFrame): Dati di addestramento delle caratteristiche.
+        X_test (DataFrame): Dati di test delle caratteristiche.
+        y_train (Series): Dati di addestramento delle etichette.
+        y_test (Series): Dati di test delle etichette.
+        param_grid (dict): Dizionario di parametri per la ricerca a griglia.
+        cv (int): Numero di fold per la validazione incrociata.
+        scoring (str): Metodologia di scoring per la validazione incrociata.
+
+    Returns:
+        tuple: Modello addestrato di foresta casuale con Grid Search CV, metrica dei risultati e migliori parametri.
+    """
     model = RandomForestGscvModel(param_grid=param_grid, cv=cv, scoring=scoring)
 
     model.train(X_train, y_train)
@@ -165,4 +168,3 @@ def random_forest_gridsearchcv_model(X_train, X_test, y_train, y_test, param_gri
     model.graph_feature_importance(feature_cols)
     
     return model, metrics_df, results
-

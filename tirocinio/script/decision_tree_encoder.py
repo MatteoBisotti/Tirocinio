@@ -1,7 +1,31 @@
+"""
+Questo script esegue il caricamento, la elaborazione e la valutazione di un dataset utilizzando un albero decisionale. 
+Include il sovracampionamento dei dati, la visualizzazione delle metriche e il salvataggio dei risultati.
+
+Funzioni:
+    - metrics_boxplot: Genera e visualizza box plot per varie metriche.
+    - plot_metrics_mean_dv: Genera e visualizza un grafico a barre mostrando la media e la deviazione standard per ciascuna metrica.
+    - main: Funzione principale che esegue il workflow di elaborazione dei dati, addestramento del modello e valutazione.
+
+Moduli esterni richiesti:
+    - pandas
+    - logging
+    - sys
+    - imputation (da Imputation): Modulo personalizzato per la imputazione dei dati mancanti.
+    - models (da base_lib): Modulo personalizzato che contiene i modelli di machine learning.
+    - functions (da base_lib): Funzioni di utilità per la gestione del dataset.
+    - IPython.display
+    - matplotlib.pyplot
+    - seaborn
+"""
+
 import pandas as pd
 import logging
-
 import sys
+from IPython.display import display
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 sys.path.append("../Imputation")
 import imputation as imp 
 
@@ -9,46 +33,39 @@ sys.path.append("../base_lib")
 import models
 import functions as func
 
-from IPython.display import display
-import matplotlib.pyplot as plt
-import seaborn as sns
-
+# Configurazione del logging
 logging.basicConfig(level=logging.INFO, format='%(message)s')
-
 file_handler = logging.FileHandler('../logs/dt_model_encoder.log')
 file_handler.setLevel(logging.INFO)
 file_handler.setFormatter(logging.Formatter('%(message)s'))
-
 logger = logging.getLogger()
-
 logger.handlers = []
 logger.addHandler(file_handler)
 
 def metrics_boxplot(metrics_total_df):
     """
-    Generates and displays box plots for various metrics.
+    Genera e visualizza box plot per varie metriche.
 
     Args:
-        metrics_total_df (DataFrame): DataFrame containing metrics data.
+        metrics_total_df (DataFrame): DataFrame contenente i dati delle metriche.
 
     """
-    # Melt the DataFrame for easier plotting with seaborn
+    # Trasforma il DataFrame per una più facile creazione del plot con seaborn
     metrics_boxplot_melted = metrics_total_df.melt(var_name='Metric', value_name='Value')
 
-    # Plot the box plots for each metric
+    # Crea i box plot per ciascuna metrica
     plt.figure(figsize=(12, 8))
     sns.boxplot(x='Metric', y='Value', data=metrics_boxplot_melted)
     plt.title('Box Plots delle Metriche')
     plt.ylabel('Value')
     plt.show()
 
-# Creazione del grafico
 def plot_metrics_mean_dv(summary_df):
     """
-    Generates and displays a bar plot showing mean and standard deviation for each metric.
+    Genera e visualizza un grafico a barre mostrando la media e la deviazione standard per ciascuna metrica.
 
     Args:
-        summary_df (DataFrame): DataFrame containing the summary statistics (mean and standard deviation) for each metric.
+        summary_df (DataFrame): DataFrame contenente le statistiche (media e deviazione standard) per ciascuna metrica.
 
     """
     plt.figure(figsize=(10, 6))
@@ -66,31 +83,34 @@ def plot_metrics_mean_dv(summary_df):
     plt.show()
 
 def main():
-
     """
-    Main function to execute the data processing, model training, and evaluation workflow.
+    Funzione principale per eseguire il workflow di elaborazione dei dati, addestramento del modello e valutazione.
 
     Workflow:
-        - Load the dataset.
-        - Perform oversampling and drop unnecessary columns.
-        - Display the first few rows of the processed DataFrame.
-        - Plot the outcome feature distribution before and after oversampling.
-        - Train a decision tree model multiple times and collect metrics.
-        - Display and plot the collected metrics.
+        - Carica il dataset.
+        - Esegue il sovracampionamento e elimina le colonne non necessarie.
+        - Visualizza le prime righe del DataFrame elaborato.
+        - Crea grafici della distribuzione delle etichette prima e dopo il sovracampionamento.
+        - Addestra un modello ad albero decisionale più volte e raccoglie le metriche.
+        - Visualizza e crea grafici delle metriche raccolte.
 
     """
-
+    # Carica il dataset originale e sovracampionato
     dataset = pd.read_csv("../csv/dataset_original.csv")
     df = pd.read_csv("../csv/dataset_encoder.csv")
 
+    # Elimina le colonne non necessarie
     dataset = func.drop_cols(dataset)
     df = func.drop_cols(df)
 
+    # Visualizza le prime 5 righe del DataFrame elaborato
     display(df.head(5))
 
+    # Crea grafici della distribuzione delle etichette prima e dopo il sovracampionamento
     func.plot_outcome_feature(dataset, 'LUX_01')
     func.plot_outcome_feature(df, 'LUX_01')
 
+    # Liste per raccogliere le metriche
     accuracies = []
     precisions = []
     recalls = []
@@ -103,7 +123,7 @@ def main():
     
     last_model = None
 
-
+    # Addestramento e valutazione del modello per 10 iterazioni
     for i in range(10):
         training_set, testing_set = func.train_test(dataset, df, True)
 
@@ -113,13 +133,15 @@ def main():
         X_test = testing_set[feature_cols]
         y_test = testing_set['LUX_01']
 
+        # Addestramento del modello ad albero decisionale
         model = models.decision_tree_model(X_train, X_test, 
-                                        y_train, y_test,
-                                        8,
-                                        4,
-                                        0.0,
-                                        "gini")
+                                           y_train, y_test,
+                                           8,
+                                           4,
+                                           0.0,
+                                           "gini")
         
+        # Raccolta delle metriche
         metrics_df = model.statistics(X_test, y_test)
         accuracies.append(metrics_df['Valore'][0])
         precisions.append(metrics_df['Valore'][1])
@@ -131,7 +153,7 @@ def main():
 
         last_model = model
 
-    
+    # Creazione di un DataFrame per le metriche raccolte
     metrics_total_df = pd.DataFrame({
         'Accuratezza': accuracies,
         'Specificità': precisions,
@@ -142,6 +164,7 @@ def main():
     display(metrics_total_df)
     metrics_boxplot(metrics_total_df)
 
+    # Calcolo della media e della deviazione standard per ciascuna metrica
     means = metrics_total_df[1:].mean()
     std_devs = metrics_total_df[1:].std()
     summary_df = pd.DataFrame({
@@ -152,8 +175,13 @@ def main():
     display(summary_df)
     plot_metrics_mean_dv(summary_df)
 
+    # Log delle statistiche riassuntive
     for index, row in summary_df.iterrows():
         logging.info(f"{row['Metrica']}:{row['Media']}:{row['Deviazione Standard']}")
 
+    # Stampa dell'albero decisionale e importanza delle feature
     last_model.print_tree(feature_cols)
     last_model.graph_feature_importance(feature_cols)
+
+if __name__ == "__main__":
+    main()

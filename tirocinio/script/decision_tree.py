@@ -1,14 +1,17 @@
 """
-This module performs data processing, model training, and evaluation using decision tree models
-on a dataset. It includes functions for data visualization, metrics calculation, and plotting
-the results.
+Questo modulo esegue l'elaborazione dei dati, l'addestramento del modello e la valutazione utilizzando modelli ad albero decisionale
+su un dataset. Include funzioni per la visualizzazione dei dati, il calcolo delle metriche e la rappresentazione grafica
+dei risultati.
 
-Functions:
-    metrics_boxplot(metrics_total_df): Generates and displays box plots for various metrics.
-    plot_metrics_mean_dv(summary_df): Generates and displays a bar plot showing mean and standard deviation for each metric.
-    main(): Main function to execute the data processing, model training, and evaluation workflow.
+Funzioni:
+    metrics_boxplot(metrics_total_df): Genera e visualizza box plot per varie metriche.
+    plot_metrics_mean_dv(summary_df): Genera e visualizza un grafico a barre che mostra la media e la deviazione standard per ogni metrica.
+    main(): Funzione principale per eseguire l'elaborazione dei dati, l'addestramento del modello e il flusso di lavoro di valutazione.
 
-Dependencies:
+Moduli:
+    imp: modulo per l'imputazione dei dati.
+    models: modulo contenente il modello di machine learning.
+    functions: modulo contenente varie funzioni di supporto.
     pandas
     matplotlib
     seaborn
@@ -16,27 +19,21 @@ Dependencies:
     sys
     logging
 
-Modules:
-    imp: module for data imputation.
-    models: module containing machine learning model.
-    functions: module containing various helper functions.
-
 """
 
 import pandas as pd
 import logging
-
 import sys
+from IPython.display import display
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 sys.path.append("../Imputation")
 import imputation as imp 
 
 sys.path.append("../base_lib")
 import models
 import functions as func
-
-from IPython.display import display
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 logging.basicConfig(level=logging.INFO, format='%(message)s')
 
@@ -52,30 +49,27 @@ logger.addHandler(file_handler)
 
 def metrics_boxplot(metrics_total_df):
     """
-    Generates and displays box plots for various metrics.
+    Genera e visualizza box plot per varie metriche.
 
     Args:
-        metrics_total_df (DataFrame): DataFrame containing metrics data.
-
+        metrics_total_df (DataFrame): DataFrame contenente i dati delle metriche.
     """
-    # Melt the DataFrame for easier plotting with seaborn
+    # Melt il DataFrame per facilitare la creazione del grafico con seaborn
     metrics_boxplot_melted = metrics_total_df.melt(var_name='Metric', value_name='Value')
 
-    # Plot the box plots for each metric
+    # Crea i box plot per ogni metrica
     plt.figure(figsize=(12, 8))
     sns.boxplot(x='Metric', y='Value', data=metrics_boxplot_melted)
-    plt.title('Box Plots delle Metriche')
-    plt.ylabel('Value')
+    plt.title('Box Plot delle Metriche')
+    plt.ylabel('Valore')
     plt.show()
 
-# Creazione del grafico
 def plot_metrics_mean_dv(summary_df):
     """
-    Generates and displays a bar plot showing mean and standard deviation for each metric.
+    Genera e visualizza un grafico a barre che mostra la media e la deviazione standard per ogni metrica.
 
     Args:
-        summary_df (DataFrame): DataFrame containing the summary statistics (mean and standard deviation) for each metric.
-
+        summary_df (DataFrame): DataFrame contenente le statistiche riassuntive (media e deviazione standard) per ogni metrica.
     """
     plt.figure(figsize=(10, 6))
     barplot = sns.barplot(x='Metrica', y='Media', data=summary_df, capsize=0.2)
@@ -92,20 +86,17 @@ def plot_metrics_mean_dv(summary_df):
     plt.show()
 
 def main():
-
     """
-    Main function to execute the data processing, model training, and evaluation workflow.
+    Funzione principale per eseguire l'elaborazione dei dati, l'addestramento del modello e il flusso di lavoro di valutazione.
 
     Workflow:
-        - Load the dataset.
-        - Perform oversampling and drop unnecessary columns.
-        - Display the first few rows of the processed DataFrame.
-        - Plot the outcome feature distribution before and after oversampling.
-        - Train a decision tree model multiple times and collect metrics.
-        - Display and plot the collected metrics.
-
+        - Carica il dataset.
+        - Esegue il sovracampionamento e rimuove le colonne non necessarie.
+        - Visualizza le prime righe del DataFrame elaborato.
+        - Crea il grafico della distribuzione della feature di outcome prima e dopo il sovracampionamento.
+        - Addestra un modello ad albero decisionale più volte e raccoglie le metriche.
+        - Visualizza e crea il grafico delle metriche raccolte.
     """
-
     dataset = pd.read_csv("../csv/dataset_original.csv")
     df = pd.read_csv("../csv/dataset_SMOTENC.csv")
 
@@ -128,7 +119,6 @@ def main():
                     'RECTUSFEMORISM.RELEASE', 'LUX_CR']
     
     last_model = None
-
 
     for i in range(10):
         training_set, testing_set = func.train_test(dataset, df, True)
@@ -157,11 +147,10 @@ def main():
 
         last_model = model
 
-    
     metrics_total_df = pd.DataFrame({
         'Accuratezza': accuracies,
-        'Specificità': precisions,
-        'Sensibilità': recalls,
+        'Precisione': precisions,
+        'Recall': recalls,
         'F1 Score': f1_scores,
         'ROC AUC': roc_aucs
     })

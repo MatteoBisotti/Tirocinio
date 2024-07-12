@@ -1,3 +1,21 @@
+"""
+Questo modulo fornisce funzioni per il sovracampionamento dei dataset, incluso il calcolo
+del numero di esempi positivi necessari e l'applicazione del sovracampionamento tramite
+un MLP Regressor.
+
+Funzioni:
+    - get_strategy_oversampling(n_negativi, rapporto): Calcola il numero di esempi positivi per il sovracampionamento.
+    - encoder(df, binary_features): Applica il sovracampionamento tramite MLP Regressor per riequilibrare la feature LUX_01 nel dataset.
+
+Moduli esterni richiesti:
+    - pandas
+    - sklearn.preprocessing.StandardScaler
+    - tensorflow.keras.models.Sequential
+    - tensorflow.keras.layers.Dense, Dropout
+    - tensorflow.keras.optimizers.Adam
+    - numpy
+"""
+
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from tensorflow.keras.models import Sequential
@@ -21,12 +39,16 @@ def get_strategy_oversampling(n_negativi, rapporto):
 
 def encoder(df, binary_features):
     """
-    Applica il sovracampionamento tramite MLPregressor per riequilibrare le classi nel dataset.
+    Applica il sovracampionamento tramite MLP Regressor per riequilibrare la feature LUX_01 nel dataset.
 
     Args:
-        dataset (pd.DataFrame): Il dataset originale.
+        df (pd.DataFrame): Il dataset originale.
         binary_features (pd.Series): Insieme delle feature con valore binario.
+
+    Returns:
+        pd.DataFrame: Il dataset bilanciato.
     """
+
     positive_class = df[df['LUX_01'] == 1]
     negative_class = df[df['LUX_01'] == 0]
 
@@ -57,7 +79,6 @@ def encoder(df, binary_features):
     new_positive_class = pd.DataFrame(new_samples, columns=X_pos.columns)
     new_positive_class['LUX_01'] = 1
 
-    # Assegnare il valore più frequente (moda) alle feature binarie
     for col in binary_features:
         if col in positive_class.columns:
             new_positive_class[col] = new_positive_class[col].apply(lambda x: round(x))

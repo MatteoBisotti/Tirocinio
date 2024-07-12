@@ -1,3 +1,18 @@
+"""
+Questo modulo esegue l'elaborazione dei dati, l'addestramento del modello Random Forest utilizzando GridSearchCV e la valutazione del modello
+su un dataset oversampled mediante SMOTENC. Include funzioni per la visualizzazione dei dati e la registrazione dei risultati tramite logging.
+
+Funzioni:
+    main(): Funzione principale per eseguire l'elaborazione dei dati, l'addestramento del modello Random Forest e la registrazione dei risultati tramite logging.
+
+Dipendenze:
+    - pandas
+    - logging
+    - models: Modulo contenente il modello Random Forest e la funzione per la ricerca a griglia.
+    - functions: Modulo contenente varie funzioni di supporto per la pulizia dei dati e la visualizzazione.
+    - IPython.display
+"""
+
 import sys
 sys.path.append("../Imputation")
 import imputation as imp 
@@ -20,6 +35,19 @@ logger.handlers = []
 logger.addHandler(file_handler)
 
 def main():
+    """
+    Funzione principale per eseguire l'elaborazione dei dati, l'addestramento del modello Random Forest e la registrazione dei risultati tramite logging.
+    
+    Workflow:
+        - Carica il dataset originale e il dataset oversampled con SMOTENC.
+        - Rimuove le colonne non necessarie.
+        - Visualizza le prime 5 righe del dataset oversampled.
+        - Plotta la distribuzione dell'outcome 'LUX_01' nei due dataset.
+        - Dividi il dataset in set di addestramento e test.
+        - Definisce i parametri per la ricerca a griglia del modello Random Forest.
+        - Addestra il modello Random Forest con GridSearchCV utilizzando metrica 'f1_macro'.
+        - Registra i risultati di accuracy, precision, recall, F1-score e ROC AUC tramite logging.
+    """
     dataset = pd.read_csv("../csv/dataset_original.csv")
     df = pd.read_csv("../csv/dataset_SMOTENC.csv")
 
