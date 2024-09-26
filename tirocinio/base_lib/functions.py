@@ -9,6 +9,7 @@ Funzioni:
     drop_cols(dataset): Rimuove colonne specifiche dal dataset.
     train_test(dataset, df, random): Suddivide il dataset in set di addestramento e di test.
     oversampling(dataset, X, y): Applica il sovracampionamento tramite algoritmo SMOTENC per riequilibrare le classi nel dataset.
+    oversampling_SMOTE(dataset, X, y): Applica il sovracampionamento tramite algoritmo SMOTE per riequilibrare le classi nel dataset.
     encoder(dataset, binary_features): Applica il sovracampionamento tramite MLPregressor per riequilibrare le classi nel dataset.
     scaler(dataset): Applica la standardizzazione alle caratteristiche numeriche del dataset.
     get_strategy_oversampling(n_negativi, rapporto): Calcola il numero di esempi positivi per il sovracampionamento.
@@ -18,6 +19,7 @@ Funzioni:
 Moduli esterni richiesti:
     pandas
     imblearn.over_sampling.SMOTENC
+    imblearn.over_sampling.SMOTE
     sklearn.preprocessing.StandardScaler
     matplotlib.pyplot
     seaborn
@@ -40,6 +42,7 @@ import sys
 sys.path.append("../Imputation")
 import imputation as imp
 
+from imblearn.over_sampling import SMOTE
 
 from sklearn.preprocessing import StandardScaler
 from tensorflow.keras.models import Sequential
@@ -196,6 +199,33 @@ def oversampling(dataset, X, y):
 
     return dataset
 
+def oversampling_SMOTE(dataset, X, y):
+    """
+    Applica il sovracampionamento tramite algoritmo SMOTE per riequilibrare le classi nel dataset.
+
+    Args:
+        dataset (pd.DataFrame): Il dataset originale.
+        X (pd.DataFrame): Le caratteristiche del dataset.
+        y (pd.Series): Le etichette del dataset.
+
+    Returns:
+        pd.DataFrame: Il dataset riequilibrato con sovracampionamento.
+    """
+    n_negative = len(dataset[dataset['LUX_01']==0])
+    n_positive = get_strategy_oversampling(n_negative, 2/3)
+
+    sampling_strategy = {0: n_negative, 1: n_positive}
+
+    smote = SMOTE(random_state=42, sampling_strategy=sampling_strategy)
+    X_resampled, y_resampled = smote.fit_resample(X, y)
+
+    X_resampled_df = pd.DataFrame(X_resampled, columns=X.columns)
+    y_resampled_df = pd.Series(y_resampled, name='LUX_01')
+
+    df = pd.concat([X_resampled_df, y_resampled_df], axis=1)
+    df = df.sample(random_state=42, frac=1)
+    return df
+
 def encoder(df, binary_features):
     """
     Applica il sovracampionamento tramite MLPregressor per riequilibrare le classi nel dataset.
@@ -322,9 +352,6 @@ def display_corr_matrix(dataset):
                         square=True, linewidths=.5, 
                         cbar_kws={'shrink': .5},
                         vmin=-1.0, vmax=1.0)
-
-    # Titolo
-    plt.title("Matrice di correlazione", fontsize=15)
 
     # Descrizione delle etichette della matrice
     plt.xticks(rotation=45, ha='right')

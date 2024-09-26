@@ -47,7 +47,7 @@ def oversampling(dataset, X, y):
     n_positive = get_strategy_oversampling(n_negative, 2/3)
 
     sampling_strategy = {0: n_negative, 1: n_positive}
-    smote_nc = SMOTENC(categorical_features=categorical_features, random_state=42, sampling_strategy=sampling_strategy)
+    smote_nc = SMOTENC(categorical_features=categorical_features, random_state=123, sampling_strategy=sampling_strategy)
 
     X_resampled, y_resampled = smote_nc.fit_resample(X, y)
 

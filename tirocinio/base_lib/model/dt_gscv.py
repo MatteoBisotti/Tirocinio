@@ -107,7 +107,6 @@ class DecisionTreeGscvModel(BaseModel):
                   filled=True, 
                   rounded=True, 
                   class_names=True, max_depth=2)
-        plt.title("Albero di decisione")
         plt.show()
 
     def feature_importance(self):
@@ -133,8 +132,6 @@ class DecisionTreeGscvModel(BaseModel):
 
         plt.figure(figsize=(10, 6))
         plt.barh(feature_importance['Feature'], feature_importance['Importance'])
-
-        plt.title("Importanza delle feature")
         plt.xlabel("Importance")
         plt.ylabel("Feature")
         plt.show()

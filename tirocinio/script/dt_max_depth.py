@@ -43,33 +43,6 @@ sys.path.append("../base_lib")
 import models
 import functions as func
 
-def load_csv():
-    """
-    Carica il dataset da un file CSV, lo pulisce e imputa i valori mancanti.
-
-    Returns:
-        DataFrame: Il dataset pulito e imputato.
-    """
-    dataset = pd.read_csv("../data/datiLussazioniDefinitivi.csv", delimiter=";")
-    dataset = func.clean_dataset(dataset)
-    dataset = imp.total_imputation_mean_median(dataset)
-    return dataset
-
-def oversampling_SMOTENC(dataset):
-    """
-    Esegue l'oversampling sul dataset utilizzando SMOTENC.
-
-    Args:
-        dataset (DataFrame): Il dataset originale.
-
-    Returns:
-        DataFrame: Il dataset con oversampling applicato.
-    """
-    X = dataset.drop(['LUX_01'], axis=1)
-    y = dataset['LUX_01']
-    dataset = func.oversampling(dataset, X, y)
-    return dataset
-
 def plot_metric(depths, metric_values, metric_name):
     """
     Genera e visualizza un grafico per una metrica specifica in funzione della profondità massima dell'albero decisionale.
@@ -138,8 +111,8 @@ def main():
     """
     Funzione principale per eseguire l'elaborazione dei dati, l'addestramento del modello e il flusso di lavoro di valutazione.
     """
-    dataset = load_csv()
-    df = oversampling_SMOTENC(dataset)
+    dataset = pd.read_csv("../csv/dataset_original.csv")
+    df = pd.read_csv("../csv/dataset_SMOTENC.csv")
     dataset = func.drop_cols(dataset)
     df = func.drop_cols(df)
     training_set, testing_set = func.train_test(dataset, df, False)

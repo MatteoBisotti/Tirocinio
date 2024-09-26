@@ -23,10 +23,11 @@ Moduli esterni richiesti:
 """
 
 from abc import ABC, abstractmethod
-from sklearn.metrics import classification_report, accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
+from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, classification_report
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+from IPython.display import display
 
 
 class BaseModel(ABC):
@@ -64,53 +65,6 @@ class BaseModel(ABC):
             array: Predizioni del modello.
         """
         return self.model.predict(X_test)
-    
-    def get_report(self, X_test, y_test):
-        """
-        Genera un report di classificazione per i dati di test.
-
-        Args:
-            X_test (DataFrame): Dati di test.
-            y_test (Series): Etichette di test.
-
-        Returns:
-            dict: Report di classificazione.
-        """
-        predictions = self.predict(X_test=X_test)
-        return classification_report(y_test, predictions, output_dict=True)
-
-    def print_report(self, X_test, y_test):
-        """
-        Stampa il report di classificazione per i dati di test.
-
-        Args:
-            X_test (DataFrame): Dati di test.
-            y_test (Series): Etichette di test.
-        """
-        print("Report di classificazione:")
-        print(self.get_report(X_test, y_test))
-
-    def get_stats(self, X_test, y_test):
-        """
-        Calcola e ritorna metriche di valutazione del modello.
-
-        Args:
-            X_test (DataFrame): Dati di test.
-            y_test (Series): Etichette di test.
-
-        Returns:
-            tuple: Tuple contenente accuratezza, precisione, richiamo, F1 score, e ROC AUC.
-        """
-        predictions = self.predict(X_test)
-
-        accuracy = accuracy_score(y_test, predictions)
-        precision = precision_score(y_test, predictions)
-        recall = recall_score(y_test, predictions)
-        f1 = f1_score(y_test, predictions)
-        roc_auc = roc_auc_score(y_test, predictions)
-
-        return accuracy, precision, recall, f1, roc_auc
-    
 
     def statistics(self, X_test, y_test):
         """
@@ -125,17 +79,31 @@ class BaseModel(ABC):
         """
         predictions = self.predict(X_test)
 
+        cm = confusion_matrix(y_test, predictions)
+        tn, fp, fn, tp = cm.ravel()  
+
+        print(cm)
+
+        print("tn = ", tn)
+        print("fp = ", fp)
+        print("fn = ", fn)
+        print("tp = ", tp)
+
         accuracy = accuracy_score(y_test, predictions)
         recall = recall_score(y_test, predictions, average='macro', zero_division=1)
         precision = precision_score(y_test, predictions, average='macro', zero_division=1)
         f1 = f1_score(y_test, predictions, average='macro', zero_division=1)
         roc_auc = roc_auc_score(y_test, predictions)
+        specificity = tn / (tn + fp)
 
         data = {
-            'Metrica': ['Accuratezza', 'Sensibilità', 'Specificità', 'F1-score', 'ROC AUC'],
-            'Valore': [accuracy, recall, precision, f1, roc_auc]
+            'Metrica': ['Accuracy', 'Recall', 'Precision', 'F1-score', 'ROC AUC', 'Specificity'],
+            'Valore': [accuracy, recall, precision, f1, roc_auc, specificity]
         }
         metrics_df = pd.DataFrame(data)
+        display(metrics_df)
+        self.plot_metrics(metrics_df)
+        
         return metrics_df
 
     def plot_metrics(self, metrics_df):
@@ -155,13 +123,12 @@ class BaseModel(ABC):
                             xytext = (0, 9),
                             textcoords = 'offset points')
             
-        barplot.grid(True, axis='y')
-        barplot.grid(False, axis='x')
+        #barplot.grid(True, axis='y')
+        #barplot.grid(False, axis='x')
 
         plt.xlabel('Metriche')
         plt.ylabel('Valori')
-        plt.title('Metriche del modello sui dati originali')
-        plt.ylim(0, 1)
+        plt.ylim(0, 1.05)
         plt.show()
 
     def graph_feature_importance(self, feature_name):

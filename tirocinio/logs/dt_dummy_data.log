@@ -1,0 +1,3 @@
+criterio:gini:max_depth:8:min_impurity_decrease:0.0:min_samples_split:4
+accuracy:0.95375:precision:0.5274891774891776:recall:0.5731651111879249:f1_score:0.5369139066631204:roc_auc:0.5274891774891775:specificity:0.9883116883116884
+-------------------------------

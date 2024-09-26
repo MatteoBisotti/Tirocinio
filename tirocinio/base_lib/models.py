@@ -74,21 +74,23 @@ def decision_tree_model(X_train, X_test, y_train, y_test, max_depth, min_sample_
                               criterion=criterion)
     
     model.train(X_train, y_train)
+
+    metrics_df = model.statistics(X_test, y_test)
     
-    return model
+    return model, metrics_df
 
 def decision_tree_gridsearchcv_model(X_train, X_test, y_train, y_test, param_grid, cv, scoring):
     """
     Crea e addestra un modello di albero di decisione con Grid Search CV.
 
     Args:
-        X_train (DataFrame): Dati di addestramento delle caratteristiche.
-        X_test (DataFrame): Dati di test delle caratteristiche.
-        y_train (Series): Dati di addestramento delle etichette.
-        y_test (Series): Dati di test delle etichette.
-        param_grid (dict): Dizionario di parametri per la ricerca a griglia.
-        cv (int): Numero di fold per la validazione incrociata.
-        scoring (str): Metodologia di scoring per la validazione incrociata.
+        X_train: Dati di addestramento delle caratteristiche.
+        X_test: Dati di test delle caratteristiche.
+        y_train: Dati di addestramento delle etichette.
+        y_test: Dati di test delle etichette.
+        param_grid: Dizionario di parametri per la ricerca a griglia.
+        cv: Numero di fold per la validazione incrociata.
+        scoring: Metodologia di scoring per la validazione incrociata.
 
     Returns:
         tuple: Modello addestrato di albero di decisione con Grid Search CV e report dei risultati.
@@ -101,15 +103,10 @@ def decision_tree_gridsearchcv_model(X_train, X_test, y_train, y_test, param_gri
     display(results)
 
     metrics_df = model.statistics(X_test, y_test)
-    display(metrics_df)
-    model.plot_metrics(metrics_df)
     
-    model.print_tree(feature_cols)
-    model.graph_feature_importance(feature_cols)
-    
-    return model, model.get_report(X_test, y_test)
+    return model, results, metrics_df
 
-def random_forest_model(X_train, X_test, y_train, y_test, n_estimators, max_depth):
+def random_forest_model(X_train, X_test, y_train, y_test, n_estimators, max_depth, feature):
     """
     Crea e addestra un modello di foresta casuale.
 
@@ -151,7 +148,9 @@ def random_forest_gridsearchcv_model(X_train, X_test, y_train, y_test, param_gri
         scoring (str): Metodologia di scoring per la validazione incrociata.
 
     Returns:
-        tuple: Modello addestrato di foresta casuale con Grid Search CV, metrica dei risultati e migliori parametri.
+        model: Modello addestrato di foresta casuale con Grid Search CV, metrica dei risultati e migliori parametri
+        results: Migliori parametri della grid search
+        metrics_df
     """
     model = RandomForestGscvModel(param_grid=param_grid, cv=cv, scoring=scoring)
 
@@ -161,10 +160,17 @@ def random_forest_gridsearchcv_model(X_train, X_test, y_train, y_test, param_gri
     display(results)
 
     metrics_df = model.statistics(X_test, y_test)
-    display(metrics_df)
-    model.plot_metrics(metrics_df)
     
-    model.print_tree(feature_cols)
-    model.graph_feature_importance(feature_cols)
+    return model, results, metrics_df
+
+def random_forest_grid_search_pca(X_train, X_test, y_train, y_test, param_grid, cv, scoring):
+    model = RandomForestGscvModel(param_grid=param_grid, cv=cv, scoring=scoring)
+
+    model.train(X_train, y_train)
+
+    results = model.get_best_params()
+    display(results)
+
+    metrics_df = model.statistics(X_test, y_test)
     
-    return model, metrics_df, results
+    return model, results, metrics_df
