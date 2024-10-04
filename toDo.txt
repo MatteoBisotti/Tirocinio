@@ -1,7 +1,0 @@
-Cose da fare:
-
-- sistemare codice dei vari script con i nuovi dataset
-- stampare risultati del dataset originale per mostrare miglioramento dell'oversampling
-- pre processing dei nuovi dataset con dummy feature 
-- continuare readme
-- 
