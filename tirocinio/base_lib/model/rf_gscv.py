@@ -101,7 +101,7 @@ class RandomForestGscvModel(BaseModel):
         Args:
             feature_cols (list): Lista dei nomi delle caratteristiche.
         """
-        plt.figure(figsize=(16, 12))
+        plt.figure(figsize=(12, 8))
         plot_tree(decision_tree=self.model.best_estimator_[0], 
                   feature_names=feature_cols, 
                   filled=True, 

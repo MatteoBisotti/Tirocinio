@@ -5,6 +5,7 @@ import sys
 sys.path.append("../base_lib")
 import functions as func
 import models 
+import matplotlib.pyplot as plt
 
 logging.basicConfig(level=logging.INFO, format='%(message)s')
 
@@ -16,6 +17,22 @@ logger = logging.getLogger()
 
 logger.handlers = []
 logger.addHandler(file_handler)
+
+def filtered_feature_importance(model, feature_cols):
+    importance = model.feature_importance()
+        
+    feature_importance = pd.DataFrame({'Feature': feature_cols, 'Importance': importance})
+    feature_importance = feature_importance.sort_values(by='Importance', ascending=False)
+
+    feature_importance = feature_importance[feature_importance['Importance'] > 0]
+
+    plt.figure(figsize=(10, 8))
+    plt.barh(feature_importance['Feature'], feature_importance['Importance'])
+
+    plt.title("Importanza delle feature")
+    plt.xlabel("Importance")
+    plt.ylabel("Feature")
+    plt.show()
 
 def main():
     dataset = pd.read_csv("../csv/dataset_dummy_feature.csv")
@@ -51,4 +68,4 @@ def main():
 
     feature_cols = list(X_train.columns)
     model.print_tree(feature_cols)
-    model.graph_feature_importance(feature_cols)
+    filtered_feature_importance(model, feature_cols)

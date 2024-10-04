@@ -1,0 +1,4 @@
+criterio:entropy:max_depth:8:min_impurity_decrease:0.0:min_samples_split:6
+accuracy:0.8566666666666667:precision:0.86:recall:0.8362757461118118:f1_score:0.8447858887511881:roc_auc:0.8600000000000001:specificity:0.85
+mse:1.979063135847893
+-------------------------------

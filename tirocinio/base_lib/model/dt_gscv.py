@@ -101,7 +101,7 @@ class DecisionTreeGscvModel(BaseModel):
         Args:
             feature_cols (list): Lista dei nomi delle feature.
         """
-        plt.figure(figsize=(16, 12))
+        plt.figure(figsize=(12, 8))
         plot_tree(decision_tree=self.best_estimator(), 
                   feature_names=feature_cols, 
                   filled=True, 

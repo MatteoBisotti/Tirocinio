@@ -73,4 +73,9 @@ def main():
     display(metrics_df)
     model.plot_metrics(metrics_df)
 
+    logging.info(f"criterio:{results['criterion'][0]}:max_depth:{results['max_depth'][0]}:min_impurity_decrease:{results['min_impurity_decrease'][0]}:min_samples_split:{results['min_samples_split'][0]}:n_estimators:{results['n_estimators'][0]}")
+    logging.info(f"accuracy:{metrics_df['Valore'][0]}:precision:{metrics_df['Valore'][1]}:recall:{metrics_df['Valore'][2]}:f1_score:{metrics_df['Valore'][3]}:roc_auc:{metrics_df['Valore'][4]}:specificity:{metrics_df['Valore'][5]}")
+    logging.info(f"mse:{mse}")
+    logging.info("-------------------------------")
+
     display(Markdown(f"**MSE** = {mse}"))
