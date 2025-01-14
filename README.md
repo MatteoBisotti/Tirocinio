@@ -29,4 +29,7 @@ Assicurati di avere installato [Anaconda](https://www.anaconda.com/products/indi
     pip install numpy
     pip install pandas
     pip install sklearn
+    pip install logging
+    pip install matplotlib
+    pip install ipython
     ```
