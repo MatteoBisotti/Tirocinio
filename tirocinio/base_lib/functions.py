@@ -283,7 +283,7 @@ def plot_outcome_feature(df, feature_name):
     plt.title('Distribuzione dei valori di {}'.format(feature_name))
     plt.show()
 
-def display_corr_matrix(dataset):
+def display_corr_matrix(dataset, title):
     '''
     Visualizza la matrice di correlazione del dataset tramite heatmap del modulo seaborn e la restituisce.
 
@@ -308,5 +308,6 @@ def display_corr_matrix(dataset):
     # Descrizione delle etichette della matrice
     plt.xticks(rotation=45, ha='right')
     plt.yticks(rotation=0)
+    plt.title(title, fontsize=25)
 
     return matrice_corr
