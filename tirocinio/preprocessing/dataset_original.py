@@ -1,6 +1,5 @@
 """
-Questo script carica un dataset utilizzando una funzione definita in un modulo esterno
-e salva il dataset risultante in un file CSV.
+Questo script carica il dataset il dataset pulito e lo salva in un nuovo file CSV.
 
 Funzioni:
     - load_csv: Carica il dataset dal file CSV.
@@ -8,7 +7,7 @@ Funzioni:
 Moduli esterni richiesti:
     - pandas: Utilizzato per la manipolazione dei DataFrame.
     - sys: Utilizzato per aggiungere percorsi al path di ricerca del modulo.
-    - functions (da base_lib): Funzioni di utilità per la gestione del dataset.
+    - functions (da base_lib): Insieme di funzoine per la gestione della pulizia del dataset.
 """
 
 import pandas as pd

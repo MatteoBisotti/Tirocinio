@@ -1,3 +1,8 @@
+"""
+    Questo script carica il dataset originale con one hot encoding e applica oversampling tramite un autoencoder 
+    e salva il dataset ottenuto in un nuovo file CSV.
+"""
+
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler

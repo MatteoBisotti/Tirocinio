@@ -1,3 +1,9 @@
+"""
+    Questo script utilizza la PCA per ridurre la dimensionalità del dataset con one hot encoding.
+    Effettua la standardizzazione dei dati, applica la PCA, e salva i risultati in due file CSV:
+    uno contenente i dati trasformati e l'altro con i coefficienti dei componenti principali.
+"""
+
 import pandas as pd
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler

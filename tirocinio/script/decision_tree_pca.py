@@ -1,3 +1,9 @@
+"""
+    Questo script carica il dataset con pca. Applica un modello di albero di decisione, eseguendo un metodo di holdout sui dati per la 
+    divisione in training set e testing set, e una grid search con cross validation a 5 fold per 
+    la selezione dei migliori iperparametri. I risultati vengono registrati in un file di log per analisi future.
+"""
+
 import pandas as pd
 import logging
 from sklearn.model_selection import train_test_split

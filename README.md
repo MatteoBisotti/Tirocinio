@@ -32,4 +32,7 @@ Assicurati di avere installato [Anaconda](https://www.anaconda.com/products/indi
     pip install logging
     pip install matplotlib
     pip install ipython
+    pip install seaborn
+    pip install tensorflow
+    pip install keras
     ```

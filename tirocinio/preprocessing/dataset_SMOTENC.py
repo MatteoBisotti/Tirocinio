@@ -1,5 +1,5 @@
 """
-Questo script carica un dataset, applica il sovracampionamento utilizzando l'algoritmo SMOTENC
+Questo script carica il dataset originale, applica oversampling utilizzando l'algoritmo SMOTENC
 e salva il dataset risultante in un file CSV.
 
 Funzioni:

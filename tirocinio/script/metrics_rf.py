@@ -1,3 +1,9 @@
+"""
+    Questo script legge le metriche dei modelli di random forest da file di log, le organizza in un formato tabellare 
+    e crea un grafico a barre raggruppato per confrontare diverse metriche (Accuracy, Precision, Recall, F1-Score, ROC AUC e Specificity) 
+    tra i vari esperimenti.
+"""
+
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd

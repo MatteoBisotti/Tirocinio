@@ -1,3 +1,9 @@
+"""
+    Questo script esegue un'analisi della PCA (Principal Component Analysis) su un dataset,
+    mostrando come varia la varianza spiegata cumulativa in funzione del numero di componenti principali.
+    Il risultato è presentato sia in formato tabellare che grafico.
+"""
+
 import matplotlib.pyplot as plt
 import pandas as pd
 from IPython.display import Markdown, display

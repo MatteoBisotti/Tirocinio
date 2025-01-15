@@ -1,3 +1,13 @@
+"""
+Questo script carica il dataset originale, applica una one hot encoding
+e salva il dataset risultante in un file CSV.
+
+Moduli esterni richiesti:
+    - pandas: per la manipolazione e analisi dei dati.
+    - sys: per la gestione del percorso della libreria personalizzata.
+    - functions (libreria personalizzata): contiene la funzione `load_csv()` per il caricamento del dataset.
+"""
+
 import pandas as pd
 import sys
 

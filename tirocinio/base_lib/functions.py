@@ -226,54 +226,6 @@ def oversampling_SMOTE(dataset, X, y):
     df = df.sample(random_state=42, frac=1)
     return df
 
-def encoder(df, binary_features):
-    """
-    Applica il sovracampionamento tramite MLPregressor per riequilibrare le classi nel dataset.
-
-    Args:
-        dataset (pd.DataFrame): Il dataset originale.
-        binary_features (pd.Series): Insieme delle feature con valore binario.
-    """
-
-    positive_class = df[df['LUX_01'] == 1]
-    negative_class = df[df['LUX_01'] == 0]
-
-    X_pos = positive_class.drop(columns=['LUX_01'])
-    y_pos = positive_class['LUX_01']
-
-    scaler = StandardScaler()
-    X_pos_scaled = scaler.fit_transform(X_pos)
-
-    input_dim = X_pos_scaled.shape[1]
-    mlp_regressor = Sequential([
-        Dense(64, input_dim=input_dim, activation='relu'),
-        Dropout(0.2),
-        Dense(32, activation='relu'),
-        Dropout(0.2),
-        Dense(16, activation='relu'),
-        Dropout(0.2),
-        Dense(input_dim, activation='linear')
-    ])
-
-    mlp_regressor.compile(optimizer=Adam(learning_rate=0.001), loss='mse')
-    mlp_regressor.fit(X_pos_scaled, X_pos_scaled, epochs=50, batch_size=32, validation_split=0.2)
-
-    num_new_samples = get_strategy_oversampling(len(negative_class), 2/3) - len(positive_class)
-    new_samples_scaled = mlp_regressor.predict(np.random.rand(num_new_samples, input_dim))
-    new_samples = scaler.inverse_transform(new_samples_scaled)
-
-    new_positive_class = pd.DataFrame(new_samples, columns=X_pos.columns)
-    new_positive_class['LUX_01'] = 1
-
-    for col in binary_features:
-        new_positive_class[col] = new_positive_class[col].apply(lambda x: round(x) if not (x == 0 or x == 1) else x)
-
-    dataset = pd.concat([df, new_positive_class], ignore_index=True)
-
-    dataset = dataset.sample(frac=1).reset_index(drop=True)
-
-    return dataset
-
 def scaler(dataset):
     """
     Applica la standardizzazione alle caratteristiche numeriche del dataset.
