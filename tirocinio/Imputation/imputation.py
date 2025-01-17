@@ -36,12 +36,13 @@ def imputation_median(dataset, name_feature):
 
 # metodo per imputare l'intero dataset con media/mediana
 def total_imputation_mean_median(dataset):
+    dataset_imputed = dataset.copy()
 
-    dataset = imputation_mean(dataset, 'BCS')
-    dataset = imputation_median(dataset, 'STEMANTEVERSIONREAL')
-    dataset = imputation_mean(dataset, 'ALO')
+    dataset_imputed = imputation_mean(dataset_imputed, 'BCS')
+    dataset_imputed = imputation_median(dataset_imputed, 'STEMANTEVERSIONREAL')
+    dataset_imputed = imputation_mean(dataset_imputed, 'ALO')
 
-    return dataset
+    return dataset_imputed
 
 
 # metodo per fare imputation con regressione lineare
@@ -64,12 +65,13 @@ def imputation_logistic_regression(dataset, name_feature):
 
 # metodo per imputare l'intero dataset con regressione
 def total_imputation_regression(dataset):
+    dataset_imputed = dataset.copy()
 
-    dataset = imputation_linear_regression(dataset, 'BCS')
-    dataset = imputation_linear_regression(dataset, 'STEMANTEVERSIONREAL')
-    dataset = imputation_linear_regression(dataset, 'ALO')
+    dataset_imputed = imputation_linear_regression(dataset_imputed, 'BCS')
+    dataset_imputed = imputation_linear_regression(dataset_imputed, 'STEMANTEVERSIONREAL')
+    dataset_imputed = imputation_linear_regression(dataset_imputed, 'ALO')
 
-    return dataset
+    return dataset_imputed
 
 
 # metoto per imputare l'intero dataset con Knn imputation (weights='uniform')

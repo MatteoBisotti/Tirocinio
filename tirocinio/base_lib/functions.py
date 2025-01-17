@@ -115,7 +115,8 @@ def clean_dataset(dataset):
 
 def load_csv():
     """
-    Carica il dataset dal file CSV e lo pulisce.
+    Carica il dataset dal file CSV, fa imputation dei valori mancanti con media e 
+    mediana e lo pulisce.
 
     Returns:
         pd.DataFrame: Il dataset caricato e pulito.
@@ -311,3 +312,60 @@ def display_corr_matrix(dataset, title):
     plt.title(title, fontsize=25)
 
     return matrice_corr
+
+def plot_boxplot(original, imputed, colonna):
+    """
+    Traccia i boxplot prima e dopo l'imputazione, evidenziando i valori imputati in rosso.
+    
+    Args:
+        original (pd.DataFrame): Dataset con valori mancanti.
+        imputed (pd.DataFrame): Dataset con valori imputati.
+        colonna (str): Nome della colonna da visualizzare.
+    """
+    # Identifica gli indici dei valori imputati (dove i valori mancanti sono stati riempiti)
+    imputati_idx = original[colonna].isna()
+    
+    # Dati per il grafico
+    dati_originali = original[colonna].dropna()  # Valori originali (senza NaN)
+    dati_imputati = imputed[colonna]  # Valori dopo l'imputazione
+    valori_imputati = imputed.loc[imputati_idx, colonna]  # Solo i valori imputati
+    
+    # Crea la figura
+    fig, ax = plt.subplots(figsize=(10, 6))
+    
+    # Traccia i boxplot prima e dopo l'imputazione
+    box_originali = ax.boxplot(
+        [dati_originali],
+        positions=[1],
+        widths=0.6,
+        patch_artist=True,
+        boxprops=dict(facecolor="white", color="black"),
+        medianprops=dict(color="black")
+    )
+    box_imputati = ax.boxplot(
+        [dati_imputati],
+        positions=[2],
+        widths=0.6,
+        patch_artist=True,
+        boxprops=dict(facecolor="white", color="black"),
+        medianprops=dict(color="black")
+    )
+    
+    # Sovrapposizione dei valori imputati come punti rossi
+    ax.scatter(
+        x=[2] * len(valori_imputati),  # Posizione sul secondo boxplot
+        y=valori_imputati,
+        color="red",
+        zorder=3,
+        label="Valori imputati"
+    )
+    
+    # Etichette e legenda
+    ax.set_xticks([1, 2])
+    ax.set_xticklabels(["Prima dell'imputazione", "Dopo l'imputazione"])
+    ax.set_title(f"Boxplot di '{colonna}' prima e dopo l'imputazione")
+    ax.set_ylabel(colonna)
+    ax.legend(loc='upper left', bbox_to_anchor=(1, 1))
+    
+    # Mostra il grafico
+    plt.show()
