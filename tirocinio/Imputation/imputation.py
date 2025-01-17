@@ -74,7 +74,7 @@ def total_imputation_regression(dataset):
     return dataset_imputed
 
 
-# metoto per imputare l'intero dataset con Knn imputation (weights='uniform')
+# metoto per imputare l'intero dataset con Knn imputation
 def knn_imputation(dataset, binary_features):
 
     knn_imputer = ImputerKNN()
@@ -94,34 +94,6 @@ def knn_imputation(dataset, binary_features):
     # Converte le colonne specifiche di nuovo al tipo originale, se necessario
     for col in int_columns:
         dataset[col] = dataset[col].round().astype('int64')
-
-    return dataset
-
-
-# metodo per imputation con rete neurale con funzione di attivazione 'linear' (variabili continue)
-def nr_imputation_linear(dataset, name_feature):
-
-    imputer = LinearNrImputer(dataset)
-    dataset[name_feature] = imputer.impute_missing_value(dataset, name_feature)
-    
-    return dataset[name_feature]
-
-
-# metodo per imputation con rete neurale con funzione di attivazione 'sigmoid' (variabili binarie)
-def nr_imputation_sigmoid(dataset, name_feature):
-
-    imputer = SoftmaxNrImputer(dataset)
-    dataset[name_feature] = imputer.impute_missing_value(dataset, name_feature)
-    
-    return dataset[name_feature]
-
-
-# metodo per imputare l'intero dataset con rete neurale, con imputazione una feature per volta 
-def total_nr_imputation(dataset):
-
-    dataset['ALO'] = nr_imputation_linear(dataset, 'ALO')
-    dataset['STEMANTEVERSIONREAL'] = nr_imputation_linear(dataset, 'STEMANTEVERSIONREAL')
-    dataset['BSC'] = nr_imputation_linear(dataset, 'BCS')
 
     return dataset
 
@@ -149,9 +121,3 @@ def nr_all_imputation(dataset, binary_features):
     data_filled = imputer.impute_missing_values(model, scaler, binary_features)
 
     return data_filled
-
-
-# stampa grafici per visualizzare i nuovi valori generati
-def print_boxplot(dataset, features):
-
-    plt.figure(figsize=(14, 16))
