@@ -1,5 +1,5 @@
 """
-    Questo script carica il dataset con pca, applica oversampling tramite SMOTE.
+    Questo script carica il dataset con pca, applica oversampling tramite SMOTE .
     Applica un modello di random forest, eseguendo un metodo di holdout sui dati per la 
     divisione in training set e testing set, e una grid search con cross validation a 5 fold per 
     la selezione dei migliori iperparametri. I risultati vengono registrati in un file di log per analisi future.
@@ -45,7 +45,7 @@ def main():
         'min_impurity_decrease': [0.0, 0.01, 0.02]
     }
 
-    model, results, metrics_df = models.random_forest_grid_search_pca(X_train, X_test, 
+    model, results, metrics_df = models.random_forest_gridsearchcv_model(X_train, X_test, 
                                                                              y_train, y_test, 
                                                                              param_grid=param_grid, 
                                                                              cv=5, 
