@@ -1,8 +1,8 @@
 """
-Modulo per la gestione di modelli di apprendimento automatico: Decision Tree e Random Forest.
+Modulo per la gestione di modelli di apprendimento supervisionato: Decision Tree e Random Forest.
 
 Questo modulo include classi e funzioni per la creazione, l'addestramento e la valutazione di modelli
-di albero di decisione e foresta casuale, inclusa l'ottimizzazione degli iperparametri tramite Grid Search CV.
+di albero di decisione e random forest, inclusa l'ottimizzazione degli iperparametri tramite Grid Search CV.
 """
 
 import os
@@ -35,15 +35,6 @@ def decision_tree_gridsearchcv_model(X_train, X_test, y_train, y_test, param_gri
     """
     Crea e addestra un modello di albero di decisione con Grid Search CV.
 
-    Args:
-        X_train: Dati di addestramento delle caratteristiche.
-        X_test: Dati di test delle caratteristiche.
-        y_train: Dati di addestramento delle etichette.
-        y_test: Dati di test delle etichette.
-        param_grid: Dizionario di parametri per la ricerca a griglia.
-        cv: Numero di fold per la validazione incrociata.
-        scoring: Metodologia di scoring per la validazione incrociata.
-
     Returns:
         tuple: Modello addestrato di albero di decisione con Grid Search CV e report dei risultati.
     """
@@ -60,7 +51,7 @@ def decision_tree_gridsearchcv_model(X_train, X_test, y_train, y_test, param_gri
 
 def random_forest_gridsearchcv_model(X_train, X_test, y_train, y_test, param_grid, cv, scoring):
     """
-    Crea e addestra un modello di foresta casuale con Grid Search CV.
+    Crea e addestra un modello di random forest con Grid Search CV.
 
     Returns:
         model: Modello addestrato di foresta casuale con Grid Search CV, metrica dei risultati e migliori parametri
