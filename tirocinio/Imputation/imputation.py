@@ -6,14 +6,9 @@ from imputers.logistic_regression_imputer import LogisticRegressionImputer
 
 from imputers.imputer_knn import ImputerKNN
 
-from imputers.nr_one_linear_imputation import LinearNrImputer
-from imputers.nr_one_softmax_imputation import SoftmaxNrImputer
-
 from sklearn.preprocessing import StandardScaler
 
 from imputers.nr_all_imputation import ImputerAllNr
-
-import matplotlib.pyplot as plt
 
 
 # metodo per fare imputation con media
