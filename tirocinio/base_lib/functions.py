@@ -60,7 +60,7 @@ def load_csv():
     mediana e lo pulisce con la funzione clean_dataset()
 
     Returns:
-        pd.DataFrame: Il dataset caricato e pulito.
+        pd.DataFrame: Il dataset pulito con imputation con media e mediana.
     """
     dataset = pd.read_csv("../data/datiLussazioniDefinitivi.csv", delimiter=";")
     dataset = clean_dataset(dataset)
