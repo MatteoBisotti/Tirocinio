@@ -36,7 +36,9 @@ def decision_tree_gridsearchcv_model(X_train, X_test, y_train, y_test, param_gri
     Crea e addestra un modello di albero di decisione con Grid Search CV.
 
     Returns:
-        tuple: Modello addestrato di albero di decisione con Grid Search CV e report dei risultati.
+        model: Modello addestrato di albero di decisione 
+        results: Migliori parametri della grid search
+        metrics_df: Un dataframe con i valori delle metriche
     """
     model = DecisionTreeGscvModel(param_grid=param_grid, cv=cv, scoring=scoring)
 
@@ -54,7 +56,7 @@ def random_forest_gridsearchcv_model(X_train, X_test, y_train, y_test, param_gri
     Crea e addestra un modello di random forest con Grid Search CV.
 
     Returns:
-        model: Modello addestrato di foresta casuale con Grid Search CV, metrica dei risultati e migliori parametri
+        model: Modello addestrato di random forest
         results: Migliori parametri della grid search
         metrics_df: Un dataframe con i valori delle metriche
     """
