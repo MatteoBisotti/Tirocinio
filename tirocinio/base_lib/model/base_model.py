@@ -4,22 +4,6 @@ Modulo contenente la classe astratta BaseModel per la gestione di modelli di mac
 Classi:
     BaseModel: Classe astratta per la gestione di modelli di machine learning, includendo funzioni
                per addestrare, prevedere, e calcolare metriche di valutazione del modello.
-
-Funzioni:
-    train(X_train, y_train): Addestra il modello con i dati di addestramento.
-    predict(X_test): Prevede i risultati usando i dati di test.
-    get_report(X_test, y_test): Genera un report di classificazione per i dati di test.
-    print_report(X_test, y_test): Stampa il report di classificazione per i dati di test.
-    get_stats(X_test, y_test): Calcola e ritorna metriche di valutazione del modello.
-    statistics(X_test, y_test): Calcola e ritorna le metriche di valutazione del modello in un DataFrame.
-    plot_metrics(metrics_df): Traccia un grafico a barre delle metriche di valutazione del modello.
-
-Moduli esterni richiesti:
-    abc: Fornisce strumenti per definire classi astratte.
-    sklearn.metrics: Fornisce funzioni per calcolare metriche di valutazione per modelli di machine learning.
-    pandas: Fornisce strutture dati e strumenti di analisi per il linguaggio di programmazione Python.
-    seaborn: Fornisce un'interfaccia ad alto livello per disegnare grafici statistici.
-    matplotlib: Fornisce un'API per tracciare grafici in Python.
 """
 
 from abc import ABC, abstractmethod
@@ -33,15 +17,6 @@ from IPython.display import display
 class BaseModel(ABC):
     """
     Classe astratta per la gestione di modelli di machine learning.
-
-    Metodi:
-        train(X_train, y_train): Addestra il modello con i dati di addestramento.
-        predict(X_test): Prevede i risultati usando i dati di test.
-        get_report(X_test, y_test): Genera un report di classificazione per i dati di test.
-        print_report(X_test, y_test): Stampa il report di classificazione per i dati di test.
-        get_stats(X_test, y_test): Calcola e ritorna metriche di valutazione del modello.
-        statistics(X_test, y_test): Calcola e ritorna le metriche di valutazione del modello in un DataFrame.
-        plot_metrics(metrics_df): Traccia un grafico a barre delle metriche di valutazione del modello.
     """
 
     def train(self, X_train, y_train):
@@ -50,7 +25,7 @@ class BaseModel(ABC):
 
         Args:
             X_train (DataFrame): Dati x di addestramento.
-            y_train (Series): Dati y di addestramento.
+            y_train (Series) ati y di addestramento.
         """
         self.model.fit(X_train, y_train)
 
@@ -69,10 +44,12 @@ class BaseModel(ABC):
     def statistics(self, X_test, y_test):
         """
         Calcola e ritorna le metriche di valutazione del modello in un DataFrame.
+        Calcola la matrice di confusione e la stampa.
+        Stampa il grafico a barre delle metriche con il metodo 'plot_matrics'
 
         Args:
             X_test (DataFrame): Dati di test.
-            y_test (Series): Etichette di test.
+            y_test (Series): Label dati di test.
 
         Returns:
             DataFrame: DataFrame contenente le metriche di valutazione del modello.

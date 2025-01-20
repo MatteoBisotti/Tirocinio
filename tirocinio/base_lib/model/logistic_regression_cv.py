@@ -1,16 +1,8 @@
 """
-Modulo contenente la classe LogisticRegressionCvModel per la gestione di modelli di regressione logistica con validazione incrociata.
+Modulo contenente la classe LogisticRegressionCvModel per la gestione di modelli di regressione logistica con cross validation.
 
 Classi:
-    LogisticRegressionCvModel: Classe per la gestione di modelli di regressione logistica, includendo funzioni
-                               per addestrare, prevedere, e calcolare metriche di valutazione del modello.
-
-Funzioni:
-    __init__(self, cv): Inizializza il modello LogisticRegressionCV.
-
-Moduli esterni richiesti:
-    sklearn.linear_model: Fornisce la classe LogisticRegressionCV per la regressione logistica con validazione incrociata.
-    base_model: Modulo contenente la classe base BaseModel da cui ereditare.
+    LogisticRegressionCvModel: Classe per la definizione di modelli di regressione logistica con cross validation.
 """
 
 from sklearn.linear_model import LogisticRegressionCV
@@ -18,18 +10,12 @@ from .base_model import BaseModel
 
 class LogisticRegressionCvModel(BaseModel):
     """
-    Classe per la gestione di modelli di regressione logistica con validazione incrociata.
-
-    Metodi:
-        __init__(self, cv): Inizializza il modello LogisticRegressionCV.
+    Classe per la definzione di modelli di regressione logistica con cross validation.
     """
 
     def __init__(self, cv):
         """
         Inizializza il modello LogisticRegressionCV.
-
-        Args:
-            cv (int): Numero di fold per la validazione incrociata.
         """
         self.model = LogisticRegressionCV(cv=cv, 
                                           random_state=42,

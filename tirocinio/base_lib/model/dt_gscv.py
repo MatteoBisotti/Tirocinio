@@ -6,22 +6,6 @@ Classi:
     DecisionTreeGscvModel: Classe per la gestione di modelli di alberi decisionali, includendo funzioni
                            per addestrare, prevedere, e calcolare metriche di valutazione del modello,
                            con ottimizzazione dei parametri tramite GridSearchCV.
-
-Funzioni:
-    __init__(self, param_grid, cv, scoring): Inizializza il modello con GridSearchCV.
-    best_estimator(self): Ritorna il miglior stimatore dopo l'ottimizzazione.
-    get_best_params(self): Ritorna i migliori parametri trovati tramite GridSearchCV.
-    predict(self, X_test): Prevede i risultati usando il miglior stimatore.
-    print_tree(self, feature_cols): Traccia l'albero di decisione.
-    feature_importance(self): Ritorna l'importanza delle feature del modello.
-    graph_feature_importance(self, feature_name): Traccia un grafico dell'importanza delle feature.
-
-Moduli esterni richiesti:
-    sklearn.model_selection: Fornisce strumenti per la suddivisione dei dati e la ricerca di parametri ottimali.
-    sklearn.tree: Fornisce la classe DecisionTreeClassifier e funzioni per tracciare alberi decisionali.
-    base_model: Modulo contenente la classe base BaseModel da cui ereditare.
-    matplotlib: Fornisce un'API per tracciare grafici in Python.
-    pandas: Fornisce strutture dati e strumenti di analisi per il linguaggio di programmazione Python.
 """
 
 from sklearn.model_selection import GridSearchCV
@@ -35,25 +19,11 @@ import pandas as pd
 class DecisionTreeGscvModel(BaseModel):
     """
     Classe per la gestione di modelli di alberi decisionali con ottimizzazione dei parametri tramite GridSearchCV.
-
-    Metodi:
-        __init__(self, param_grid, cv, scoring): Inizializza il modello con GridSearchCV.
-        best_estimator(self): Ritorna il miglior stimatore dopo l'ottimizzazione.
-        get_best_params(self): Ritorna i migliori parametri trovati tramite GridSearchCV.
-        predict(self, X_test): Prevede i risultati usando il miglior stimatore.
-        print_tree(self, feature_cols): Traccia l'albero di decisione.
-        feature_importance(self): Ritorna l'importanza delle feature del modello.
-        graph_feature_importance(self, feature_name): Traccia un grafico dell'importanza delle feature.
     """
 
     def __init__(self, param_grid, cv, scoring):
         """
-        Inizializza il modello con GridSearchCV.
-
-        Args:
-            param_grid (dict): Dizionario contenente i parametri da ottimizzare.
-            cv (int): Numero di fold per la validazione incrociata.
-            scoring (str): Metodologia di scoring per valutare le performance del modello.
+        Inizializza il modello con decision tree con grid search.
         """
         self.model = GridSearchCV(DecisionTreeClassifier(random_state=42),
                                   param_grid=param_grid,
@@ -62,19 +32,13 @@ class DecisionTreeGscvModel(BaseModel):
 
     def best_estimator(self):
         """
-        Ritorna il miglior stimatore dopo l'ottimizzazione.
-
-        Returns:
-            DecisionTreeClassifier: Miglior modello dopo l'ottimizzazione.
+        Ritorna il miglior stimatore.
         """
         return self.model.best_estimator_
     
     def get_best_params(self):
         """
         Ritorna i migliori parametri trovati tramite GridSearchCV.
-
-        Returns:
-            DataFrame: DataFrame contenente i migliori parametri.
         """
         best_params = self.model.best_params_
         results = {**best_params}
@@ -85,21 +49,12 @@ class DecisionTreeGscvModel(BaseModel):
     def predict(self, X_test):
         """
         Prevede i risultati usando il miglior stimatore.
-
-        Args:
-            X_test (DataFrame): Dati di test.
-
-        Returns:
-            array: Predizioni del modello.
         """
         return self.best_estimator().predict(X_test)
     
     def print_tree(self, feature_cols):
         """
-        Traccia l'albero di decisione.
-
-        Args:
-            feature_cols (list): Lista dei nomi delle feature.
+        Traccia l'albero di decisione del miglior stimatore.
         """
         plt.figure(figsize=(12, 8))
         plot_tree(decision_tree=self.best_estimator(), 
@@ -111,19 +66,13 @@ class DecisionTreeGscvModel(BaseModel):
 
     def feature_importance(self):
         """
-        Ritorna l'importanza delle feature del modello.
-
-        Returns:
-            array: Importanza delle feature.
+        Ritorna la feature importance del miglior stimatore.
         """
         return self.best_estimator().feature_importances_
 
     def graph_feature_importance(self, feature_name):
         """
-        Traccia un grafico dell'importanza delle feature.
-
-        Args:
-            feature_name (list): Lista dei nomi delle feature.
+        Traccia il grafico della feature importance.
         """
         importance = self.feature_importance()
 
