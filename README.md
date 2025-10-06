@@ -37,5 +37,3 @@ Assicurati di avere installato [Anaconda](https://www.anaconda.com/products/indi
     pip install tensorflow
     pip install keras
     ```
-
-## Struttura progetto
